@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Intranet Escolar | Estudiantes</title>
+
+    <link
+        rel="stylesheet"
+        href="css/estudiantes.css"
+    >
+</head>
+
+<body>
+
+    <div class="estudiantes-page">
+
+        <!-- HEADER -->
+
+        <header class="page-header">
+
+            <div>
+
+                <p class="page-label">
+                    Gestión académica
+                </p>
+
+                <h1>
+                    Estudiantes
+                </h1>
+
+                <p class="page-description">
+                    Registro y administración de estudiantes.
+                </p>
+
+            </div>
+
+            <a
+                href="dashboard.html"
+                class="back-button"
+            >
+                Volver al dashboard
+            </a>
+
+        </header>
+
+
+        <!-- FILTROS -->
+
+        <section class="toolbar">
+
+            <div class="search-box">
+
+                <label for="searchInput">
+                    Buscar
+                </label>
+
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="Nombre, identificación..."
+                >
+
+            </div>
+
+
+            <div class="filter-box">
+
+                <label for="levelFilter">
+                    Nivel
+                </label>
+
+                <select id="levelFilter">
+
+                    <option value="todos">
+                        Todos los niveles
+                    </option>
+
+                    <option value="primaria">
+                        Primaria
+                    </option>
+
+                    <option value="secundaria">
+                        Secundaria
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="filter-box">
+
+                <label for="gradeFilter">
+                    Grado
+                </label>
+
+                <select id="gradeFilter">
+
+                    <option value="todos">
+                        Todos los grados
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="newStudentButton"
+                class="primary-button"
+            >
+                + Nuevo estudiante
+            </button>
+
+        </section>
+
+
+        <!-- FORMULARIO -->
+
+        <section
+            id="formSection"
+            class="form-section"
+            hidden
+        >
+
+            <div class="section-title">
+
+                <div>
+
+                    <p>
+                        Información académica
+                    </p>
+
+                    <h2 id="formTitle">
+                        Nuevo estudiante
+                    </h2>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="cancelButton"
+                    class="secondary-button"
+                >
+                    Cancelar
+                </button>
+
+            </div>
+
+
+            <form id="studentForm">
+
+                <input
+                    type="hidden"
+                    id="studentId"
+                >
+
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="identification">
+                            Identificación *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="identification"
+                            placeholder="Ej. 1-2345-6789"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="fullName">
+                            Nombre completo *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="fullName"
+                            placeholder="Nombre y apellidos"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="birthDate">
+                            Fecha de nacimiento *
+                        </label>
+
+                        <input
+                            type="date"
+                            id="birthDate"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="level">
+                            Nivel *
+                        </label>
+
+                        <select
+                            id="level"
+                            required
+                        >
+
+                            <option value="">
+                                Seleccione un nivel
+                            </option>
+
+                            <option value="primaria">
+                                Primaria
+                            </option>
+
+                            <option value="secundaria">
+                                Secundaria
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="grade">
+                            Grado *
+                        </label>
+
+                        <select
+                            id="grade"
+                            required
+                        >
+
+                            <option value="">
+                                Seleccione un grado
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="section">
+                            Sección *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="section"
+                            placeholder="Ej. A"
+                            maxlength="5"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="guardian">
+                            Encargado *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="guardian"
+                            placeholder="Nombre del encargado"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="phone">
+                            Teléfono
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="phone"
+                            placeholder="Ej. 8888-8888"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label for="email">
+                            Correo electrónico
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="correo@ejemplo.com"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="formMessage"
+                    class="form-message"
+                    role="alert"
+                ></div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                    >
+                        Guardar estudiante
+                    </button>
+
+                    <button
+                        type="button"
+                        id="cancelButtonBottom"
+                        class="secondary-button"
+                    >
+                        Cancelar
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- RESUMEN -->
+
+        <section class="summary-grid">
+
+            <article class="summary-card">
+
+                <span>
+                    Estudiantes
+                </span>
+
+                <strong id="totalCounter">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    Primaria
+                </span>
+
+                <strong id="primaryCounter">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    Secundaria
+                </span>
+
+                <strong id="secondaryCounter">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    Activos
+                </span>
+
+                <strong id="activeCounter">
+                    0
+                </strong>
+
+            </article>
+
+        </section>
+
+
+        <!-- TABLA -->
+
+        <section class="students-section">
+
+            <div class="section-title">
+
+                <div>
+
+                    <p>
+                        Registro académico
+                    </p>
+
+                    <h2>
+                        Estudiantes registrados
+                    </h2>
+
+                </div>
+
+                <span id="studentCounter">
+                    0 estudiantes
+                </span>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Identificación
+                            </th>
+
+                            <th>
+                                Estudiante
+                            </th>
+
+                            <th>
+                                Nivel
+                            </th>
+
+                            <th>
+                                Grado
+                            </th>
+
+                            <th>
+                                Sección
+                            </th>
+
+                            <th>
+                                Encargado
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                            <th>
+                                Acciones
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody
+                        id="studentsTableBody"
+                    >
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <script src="./js/estudiantes.js"></script>
+
+</body>
+
+</html>
