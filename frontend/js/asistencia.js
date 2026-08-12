@@ -5,20 +5,14 @@
 const usuarioSesion =
     localStorage.getItem("usuarioLogueado");
 
-
 if (!usuarioSesion) {
 
     window.location.href = "./index.html";
 
 } else {
 
-    // ============================================================
-    // USUARIO ACTUAL
-    // ============================================================
-
     const usuarioActual =
         JSON.parse(usuarioSesion);
-
 
     // ============================================================
     // ROLES PERMITIDOS
@@ -29,7 +23,6 @@ if (!usuarioSesion) {
         "docente",
         "estudiante"
     ];
-
 
     if (
         !rolesPermitidos.includes(
@@ -53,7 +46,6 @@ if (!usuarioSesion) {
         const puedeGestionar =
             usuarioActual.role === "administracion" ||
             usuarioActual.role === "docente";
-
 
         // ========================================================
         // DATOS INICIALES
@@ -108,15 +100,14 @@ if (!usuarioSesion) {
 
         ];
 
-
         let asistencias =
             JSON.parse(
-                localStorage.getItem("asistencias")
+                localStorage.getItem(
+                    "asistencias"
+                )
             ) || asistenciaInicial;
 
-
         let asistenciaEditando = null;
-
 
         // ========================================================
         // ELEMENTOS HTML
@@ -127,138 +118,115 @@ if (!usuarioSesion) {
                 "attendanceTableBody"
             );
 
-
         const attendanceCounter =
             document.getElementById(
                 "attendanceCounter"
             );
-
 
         const totalCounter =
             document.getElementById(
                 "totalCounter"
             );
 
-
         const presentCounter =
             document.getElementById(
                 "presentCounter"
             );
-
 
         const absentCounter =
             document.getElementById(
                 "absentCounter"
             );
 
-
         const lateCounter =
             document.getElementById(
                 "lateCounter"
             );
-
 
         const searchInput =
             document.getElementById(
                 "searchInput"
             );
 
-
         const dateFilter =
             document.getElementById(
                 "dateFilter"
             );
-
 
         const studentFilter =
             document.getElementById(
                 "studentFilter"
             );
 
-
         const statusFilter =
             document.getElementById(
                 "statusFilter"
             );
-
 
         const newAttendanceButton =
             document.getElementById(
                 "newAttendanceButton"
             );
 
-
         const formSection =
             document.getElementById(
                 "formSection"
             );
-
 
         const form =
             document.getElementById(
                 "attendanceForm"
             );
 
-
         const formTitle =
             document.getElementById(
                 "formTitle"
             );
-
 
         const cancelButton =
             document.getElementById(
                 "cancelButton"
             );
 
-
         const cancelButtonBottom =
             document.getElementById(
                 "cancelButtonBottom"
             );
-
 
         const formMessage =
             document.getElementById(
                 "formMessage"
             );
 
-
         const attendanceId =
             document.getElementById(
                 "attendanceId"
             );
 
-
-        const student =
+        let student =
             document.getElementById(
                 "student"
             );
-
 
         const date =
             document.getElementById(
                 "date"
             );
 
-
         const status =
             document.getElementById(
                 "status"
             );
-
 
         const teacher =
             document.getElementById(
                 "teacher"
             );
 
-
         const observation =
             document.getElementById(
                 "observation"
             );
-
 
         // ========================================================
         // GUARDAR ASISTENCIAS
@@ -268,11 +236,229 @@ if (!usuarioSesion) {
 
             localStorage.setItem(
                 "asistencias",
-                JSON.stringify(asistencias)
+                JSON.stringify(
+                    asistencias
+                )
             );
 
         }
 
+        // ========================================================
+        // OBTENER ESTUDIANTES REGISTRADOS
+        // ========================================================
+
+        function obtenerEstudiantesRegistrados() {
+
+            const estudiantesGuardados =
+                localStorage.getItem(
+                    "estudiantes"
+                );
+
+            if (!estudiantesGuardados) {
+
+                return [];
+
+            }
+
+            try {
+
+                const estudiantes =
+                    JSON.parse(
+                        estudiantesGuardados
+                    );
+
+                if (
+                    !Array.isArray(
+                        estudiantes
+                    )
+                ) {
+
+                    return [];
+
+                }
+
+                return estudiantes
+                    .filter(
+                        estudiante =>
+                            estudiante &&
+                            estudiante.fullName
+                    )
+                    .sort(
+                        (a, b) =>
+                            a.fullName.localeCompare(
+                                b.fullName
+                            )
+                    );
+
+            } catch (error) {
+
+                console.error(
+                    "Error al cargar estudiantes:",
+                    error
+                );
+
+                return [];
+
+            }
+
+        }
+
+        // ========================================================
+        // CARGAR ESTUDIANTES EN EL FORMULARIO
+        // ========================================================
+
+        function cargarEstudiantesEnFormulario(
+            estudianteSeleccionado = ""
+        ) {
+
+            const campoActual =
+                document.getElementById(
+                    "student"
+                );
+
+            if (!campoActual) {
+
+                return;
+
+            }
+
+            // Si todavía es un input, lo convertimos en select
+            if (
+                campoActual.tagName !==
+                "SELECT"
+            ) {
+
+                const select =
+                    document.createElement(
+                        "select"
+                    );
+
+                select.id =
+                    "student";
+
+                select.name =
+                    "student";
+
+                select.required =
+                    true;
+
+                select.className =
+                    campoActual.className;
+
+                campoActual.replaceWith(
+                    select
+                );
+
+            }
+
+            // Actualizar referencia
+            student =
+                document.getElementById(
+                    "student"
+                );
+
+            const estudiantes =
+                obtenerEstudiantesRegistrados();
+
+            student.innerHTML = `
+
+                <option value="">
+                    Seleccione un estudiante
+                </option>
+
+            `;
+
+            // ====================================================
+            // ESTUDIANTES REGISTRADOS
+            // ====================================================
+
+            estudiantes.forEach(
+                estudiante => {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        estudiante.fullName;
+
+                    option.textContent =
+                        `${estudiante.fullName} - ${
+                            estudiante.identification ||
+                            "Sin identificación"
+                        }`;
+
+                    student.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+            // ====================================================
+            // COMPATIBILIDAD CON REGISTROS ANTERIORES
+            // ====================================================
+
+            const nombresExistentes = [
+
+                ...new Set(
+
+                    asistencias
+                        .map(
+                            item =>
+                                item.student
+                        )
+                        .filter(Boolean)
+
+                )
+
+            ];
+
+            nombresExistentes.forEach(
+                nombre => {
+
+                    const existe =
+                        Array.from(
+                            student.options
+                        ).some(
+                            option =>
+                                option.value ===
+                                nombre
+                        );
+
+                    if (!existe) {
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+                        option.value =
+                            nombre;
+
+                        option.textContent =
+                            `${nombre} (registro existente)`;
+
+                        student.appendChild(
+                            option
+                        );
+
+                    }
+
+                }
+            );
+
+            if (
+                estudianteSeleccionado
+            ) {
+
+                student.value =
+                    estudianteSeleccionado;
+
+            }
+
+        }
 
         // ========================================================
         // NOMBRE DEL ESTADO
@@ -292,10 +478,10 @@ if (!usuarioSesion) {
 
             };
 
-            return estados[valor] || valor;
+            return estados[valor] ||
+                valor;
 
         }
-
 
         // ========================================================
         // CLASE DEL ESTADO
@@ -306,7 +492,6 @@ if (!usuarioSesion) {
             return `status-${valor}`;
 
         }
-
 
         // ========================================================
         // ACTUALIZAR FILTRO DE ESTUDIANTES
@@ -319,17 +504,16 @@ if (!usuarioSesion) {
                 ...new Set(
 
                     asistencias.map(
-                        item => item.student
+                        item =>
+                            item.student
                     )
 
                 )
 
             ].sort();
 
-
             const estudianteActual =
                 studentFilter.value;
-
 
             studentFilter.innerHTML = `
 
@@ -339,7 +523,6 @@ if (!usuarioSesion) {
 
             `;
 
-
             estudiantes.forEach(
                 nombre => {
 
@@ -348,14 +531,11 @@ if (!usuarioSesion) {
                             "option"
                         );
 
-
                     option.value =
                         nombre;
 
-
                     option.textContent =
                         nombre;
-
 
                     studentFilter.appendChild(
                         option
@@ -363,7 +543,6 @@ if (!usuarioSesion) {
 
                 }
             );
-
 
             if (
                 estudiantes.includes(
@@ -383,7 +562,6 @@ if (!usuarioSesion) {
 
         }
 
-
         // ========================================================
         // FILTRAR ASISTENCIAS
         // ========================================================
@@ -395,18 +573,14 @@ if (!usuarioSesion) {
                     .trim()
                     .toLowerCase();
 
-
             const fecha =
                 dateFilter.value;
-
 
             const estudiante =
                 studentFilter.value;
 
-
             const estado =
                 statusFilter.value;
-
 
             return asistencias.filter(
                 item => {
@@ -414,23 +588,26 @@ if (!usuarioSesion) {
                     const coincideTexto =
                         item.student
                             .toLowerCase()
-                            .includes(texto);
-
+                            .includes(
+                                texto
+                            );
 
                     const coincideFecha =
                         !fecha ||
-                        item.date === fecha;
-
+                        item.date ===
+                            fecha;
 
                     const coincideEstudiante =
-                        estudiante === "todos" ||
-                        item.student === estudiante;
-
+                        estudiante ===
+                            "todos" ||
+                        item.student ===
+                            estudiante;
 
                     const coincideEstado =
-                        estado === "todos" ||
-                        item.status === estado;
-
+                        estado ===
+                            "todos" ||
+                        item.status ===
+                            estado;
 
                     return (
 
@@ -449,16 +626,16 @@ if (!usuarioSesion) {
 
         }
 
-
         // ========================================================
         // ACTUALIZAR RESUMEN
         // ========================================================
 
-        function actualizarResumen(lista) {
+        function actualizarResumen(
+            lista
+        ) {
 
             const total =
                 lista.length;
-
 
             const presentes =
                 lista.filter(
@@ -467,14 +644,12 @@ if (!usuarioSesion) {
                         "presente"
                 ).length;
 
-
             const ausentes =
                 lista.filter(
                     item =>
                         item.status ===
                         "ausente"
                 ).length;
-
 
             const tardias =
                 lista.filter(
@@ -483,22 +658,17 @@ if (!usuarioSesion) {
                         "tardia"
                 ).length;
 
-
             totalCounter.textContent =
                 total;
-
 
             presentCounter.textContent =
                 presentes;
 
-
             absentCounter.textContent =
                 ausentes;
 
-
             lateCounter.textContent =
                 tardias;
-
 
             attendanceCounter.textContent =
 
@@ -510,7 +680,6 @@ if (!usuarioSesion) {
 
         }
 
-
         // ========================================================
         // RENDERIZAR TABLA
         // ========================================================
@@ -519,20 +688,19 @@ if (!usuarioSesion) {
 
             actualizarFiltroEstudiantes();
 
-
             const lista =
                 obtenerAsistenciasFiltradas();
 
-
-            tableBody.innerHTML = "";
-
+            tableBody.innerHTML =
+                "";
 
             actualizarResumen(
                 lista
             );
 
-
-            if (lista.length === 0) {
+            if (
+                lista.length === 0
+            ) {
 
                 tableBody.innerHTML = `
 
@@ -556,7 +724,6 @@ if (!usuarioSesion) {
 
             }
 
-
             lista.forEach(
                 item => {
 
@@ -564,7 +731,6 @@ if (!usuarioSesion) {
                         document.createElement(
                             "tr"
                         );
-
 
                     const acciones =
 
@@ -600,7 +766,6 @@ if (!usuarioSesion) {
 
                         `;
 
-
                     row.innerHTML = `
 
                         <td>
@@ -611,11 +776,9 @@ if (!usuarioSesion) {
 
                         </td>
 
-
                         <td>
                             ${item.date}
                         </td>
-
 
                         <td>
 
@@ -634,16 +797,13 @@ if (!usuarioSesion) {
 
                         </td>
 
-
                         <td>
                             ${item.teacher}
                         </td>
 
-
                         <td>
                             ${item.observation || "—"}
                         </td>
-
 
                         <td>
 
@@ -657,7 +817,6 @@ if (!usuarioSesion) {
 
                     `;
 
-
                     tableBody.appendChild(
                         row
                     );
@@ -666,7 +825,6 @@ if (!usuarioSesion) {
             );
 
         }
-
 
         // ========================================================
         // FECHA ACTUAL
@@ -677,10 +835,8 @@ if (!usuarioSesion) {
             const hoy =
                 new Date();
 
-
             const año =
                 hoy.getFullYear();
-
 
             const mes =
                 String(
@@ -690,7 +846,6 @@ if (!usuarioSesion) {
                     "0"
                 );
 
-
             const dia =
                 String(
                     hoy.getDate()
@@ -699,12 +854,10 @@ if (!usuarioSesion) {
                     "0"
                 );
 
-
             date.value =
                 `${año}-${mes}-${dia}`;
 
         }
-
 
         // ========================================================
         // MOSTRAR FORMULARIO
@@ -722,15 +875,14 @@ if (!usuarioSesion) {
 
             }
 
+            cargarEstudiantesEnFormulario();
 
             formSection.hidden =
                 false;
 
-
             student.focus();
 
         }
-
 
         // ========================================================
         // LIMPIAR FORMULARIO
@@ -740,31 +892,26 @@ if (!usuarioSesion) {
 
             form.reset();
 
-
             attendanceId.value =
                 "";
-
 
             asistenciaEditando =
                 null;
 
-
             formTitle.textContent =
                 "Nueva asistencia";
-
 
             formMessage.textContent =
                 "";
 
-
             formMessage.className =
                 "form-message";
 
-
             establecerFechaActual();
 
-        }
+            cargarEstudiantesEnFormulario();
 
+        }
 
         // ========================================================
         // CERRAR FORMULARIO
@@ -775,17 +922,17 @@ if (!usuarioSesion) {
             formSection.hidden =
                 true;
 
-
             limpiarFormulario();
 
         }
-
 
         // ========================================================
         // EDITAR ASISTENCIA
         // ========================================================
 
-        function editarAsistencia(id) {
+        function editarAsistencia(
+            id
+        ) {
 
             if (!puedeGestionar) {
 
@@ -797,13 +944,11 @@ if (!usuarioSesion) {
 
             }
 
-
             const item =
                 asistencias.find(
                     item =>
                         item.id === id
                 );
-
 
             if (!item) {
 
@@ -811,49 +956,46 @@ if (!usuarioSesion) {
 
             }
 
-
             asistenciaEditando =
                 item.id;
-
 
             attendanceId.value =
                 item.id;
 
+            cargarEstudiantesEnFormulario(
+                item.student
+            );
 
             student.value =
                 item.student;
 
-
             date.value =
                 item.date;
-
 
             status.value =
                 item.status;
 
-
             teacher.value =
                 item.teacher;
 
-
             observation.value =
-                item.observation || "";
-
+                item.observation ||
+                "";
 
             formTitle.textContent =
                 "Editar asistencia";
-
 
             mostrarFormulario();
 
         }
 
-
         // ========================================================
         // ELIMINAR ASISTENCIA
         // ========================================================
 
-        function eliminarAsistencia(id) {
+        function eliminarAsistencia(
+            id
+        ) {
 
             if (!puedeGestionar) {
 
@@ -865,20 +1007,17 @@ if (!usuarioSesion) {
 
             }
 
-
             const item =
                 asistencias.find(
                     item =>
                         item.id === id
                 );
 
-
             if (!item) {
 
                 return;
 
             }
-
 
             const confirmar =
                 window.confirm(
@@ -887,13 +1026,11 @@ if (!usuarioSesion) {
 
                 );
 
-
             if (!confirmar) {
 
                 return;
 
             }
-
 
             asistencias =
                 asistencias.filter(
@@ -901,14 +1038,11 @@ if (!usuarioSesion) {
                         item.id !== id
                 );
 
-
             guardarAsistencias();
-
 
             renderizarAsistencias();
 
         }
-
 
         // ========================================================
         // MENSAJE
@@ -922,12 +1056,10 @@ if (!usuarioSesion) {
             formMessage.textContent =
                 mensaje;
 
-
             formMessage.className =
                 `form-message ${tipo}`;
 
         }
-
 
         // ========================================================
         // GUARDAR FORMULARIO
@@ -939,11 +1071,9 @@ if (!usuarioSesion) {
 
                 event.preventDefault();
 
-
                 console.log(
                     "Formulario de asistencia enviado"
                 );
-
 
                 if (!puedeGestionar) {
 
@@ -959,26 +1089,20 @@ if (!usuarioSesion) {
 
                 }
 
-
                 const studentValue =
                     student.value.trim();
-
 
                 const dateValue =
                     date.value;
 
-
                 const statusValue =
                     status.value;
-
 
                 const teacherValue =
                     teacher.value.trim();
 
-
                 const observationValue =
                     observation.value.trim();
-
 
                 console.log(
                     "Datos:",
@@ -991,16 +1115,20 @@ if (!usuarioSesion) {
                     }
                 );
 
-
-                // ------------------------------------------------
+                // ====================================================
                 // VALIDACIONES
-                // ------------------------------------------------
+                // ====================================================
 
                 if (
+
                     !studentValue ||
+
                     !dateValue ||
+
                     !statusValue ||
+
                     !teacherValue
+
                 ) {
 
                     mostrarMensaje(
@@ -1015,10 +1143,9 @@ if (!usuarioSesion) {
 
                 }
 
-
-                // ------------------------------------------------
+                // ====================================================
                 // EDITAR
-                // ------------------------------------------------
+                // ====================================================
 
                 if (
                     asistenciaEditando
@@ -1030,7 +1157,6 @@ if (!usuarioSesion) {
                                 item.id ===
                                 asistenciaEditando
                         );
-
 
                     if (!item) {
 
@@ -1046,26 +1172,20 @@ if (!usuarioSesion) {
 
                     }
 
-
                     item.student =
                         studentValue;
-
 
                     item.date =
                         dateValue;
 
-
                     item.status =
                         statusValue;
-
 
                     item.teacher =
                         teacherValue;
 
-
                     item.observation =
                         observationValue;
-
 
                     mostrarMensaje(
 
@@ -1077,10 +1197,9 @@ if (!usuarioSesion) {
 
                 }
 
-
-                // ------------------------------------------------
+                // ====================================================
                 // NUEVO REGISTRO
-                // ------------------------------------------------
+                // ====================================================
 
                 else {
 
@@ -1106,17 +1225,14 @@ if (!usuarioSesion) {
 
                     };
 
-
                     asistencias.push(
                         nuevoRegistro
                     );
-
 
                     console.log(
                         "Nuevo registro:",
                         nuevoRegistro
                     );
-
 
                     mostrarMensaje(
 
@@ -1128,24 +1244,21 @@ if (!usuarioSesion) {
 
                 }
 
-
-                // ------------------------------------------------
+                // ====================================================
                 // GUARDAR
-                // ------------------------------------------------
+                // ====================================================
 
                 guardarAsistencias();
 
-
-                // ------------------------------------------------
+                // ====================================================
                 // ACTUALIZAR TABLA
-                // ------------------------------------------------
+                // ====================================================
 
                 renderizarAsistencias();
 
-
-                // ------------------------------------------------
+                // ====================================================
                 // CERRAR
-                // ------------------------------------------------
+                // ====================================================
 
                 setTimeout(
                     () => {
@@ -1159,12 +1272,13 @@ if (!usuarioSesion) {
             }
         );
 
-
         // ========================================================
         // BOTÓN NUEVA ASISTENCIA
         // ========================================================
 
-        if (newAttendanceButton) {
+        if (
+            newAttendanceButton
+        ) {
 
             newAttendanceButton.addEventListener(
                 "click",
@@ -1180,13 +1294,12 @@ if (!usuarioSesion) {
 
                     }
 
-
                     limpiarFormulario();
 
+                    cargarEstudiantesEnFormulario();
 
                     formSection.hidden =
                         false;
-
 
                     student.focus();
 
@@ -1195,12 +1308,13 @@ if (!usuarioSesion) {
 
         }
 
-
         // ========================================================
         // BOTONES CANCELAR
         // ========================================================
 
-        if (cancelButton) {
+        if (
+            cancelButton
+        ) {
 
             cancelButton.addEventListener(
                 "click",
@@ -1209,8 +1323,9 @@ if (!usuarioSesion) {
 
         }
 
-
-        if (cancelButtonBottom) {
+        if (
+            cancelButtonBottom
+        ) {
 
             cancelButtonBottom.addEventListener(
                 "click",
@@ -1218,7 +1333,6 @@ if (!usuarioSesion) {
             );
 
         }
-
 
         // ========================================================
         // FILTROS
@@ -1229,24 +1343,20 @@ if (!usuarioSesion) {
             renderizarAsistencias
         );
 
-
         dateFilter.addEventListener(
             "change",
             renderizarAsistencias
         );
-
 
         studentFilter.addEventListener(
             "change",
             renderizarAsistencias
         );
 
-
         statusFilter.addEventListener(
             "change",
             renderizarAsistencias
         );
-
 
         // ========================================================
         // ACCIONES DE LA TABLA
@@ -1261,50 +1371,70 @@ if (!usuarioSesion) {
                         "[data-action]"
                     );
 
-
                 if (!button) {
 
                     return;
 
                 }
 
-
                 const id =
                     Number(
                         button.dataset.id
                     );
 
-
                 const action =
                     button.dataset.action;
-
 
                 if (
                     action === "edit"
                 ) {
 
-                    editarAsistencia(id);
+                    editarAsistencia(
+                        id
+                    );
 
                 }
-
 
                 if (
                     action === "delete"
                 ) {
 
-                    eliminarAsistencia(id);
+                    eliminarAsistencia(
+                        id
+                    );
 
                 }
 
             }
         );
 
+        // ========================================================
+        // ACTUALIZAR SI CAMBIAN LOS ESTUDIANTES
+        // ========================================================
+
+        window.addEventListener(
+            "storage",
+            function(event) {
+
+                if (
+                    event.key ===
+                    "estudiantes"
+                ) {
+
+                    cargarEstudiantesEnFormulario();
+
+                }
+
+            }
+        );
 
         // ========================================================
         // INICIALIZAR
         // ========================================================
 
         establecerFechaActual();
+
+        cargarEstudiantesEnFormulario();
 
         renderizarAsistencias();
 
