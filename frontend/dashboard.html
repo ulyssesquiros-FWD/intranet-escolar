@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Intranet Escolar | Dashboard</title>
+
+<link rel="stylesheet" href="./css/dashboard.css">
+```
+
+</head>
+
+<body>
+
+```
+<div class="dashboard">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-header">
+            <div class="logo">IE</div>
+
+            <div>
+                <h2>Intranet Escolar</h2>
+                <span>Sistema interno</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Navegación principal">
+
+            <button
+                type="button"
+                class="nav-item active"
+                data-module="inicio"
+            >
+                Inicio
+            </button>
+
+            <button
+                type="button"
+                class="nav-item"
+                data-module="usuarios"
+                data-role="administracion"
+            >
+                Usuarios
+            </button>
+
+            <button
+                type="button"
+                class="nav-item"
+                data-module="calificaciones"
+            >
+                Calificaciones
+            </button>
+
+            <button
+                type="button"
+                class="nav-item"
+                data-module="asistencia"
+            >
+                Asistencia
+            </button>
+
+            <button
+                type="button"
+                class="nav-item"
+                data-module="comunicados"
+            >
+                Comunicados
+            </button>
+
+        </nav>
+
+        <button
+            type="button"
+            id="logoutButton"
+            class="logout-button"
+        >
+            Cerrar sesión
+        </button>
+
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <p class="topbar-label">
+                    Panel principal
+                </p>
+
+                <h1 id="pageTitle">
+                    Inicio
+                </h1>
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    <span id="userInitial">U</span>
+                </div>
+
+                <div>
+                    <strong id="userName">
+                        Usuario
+                    </strong>
+
+                    <span id="userRole">
+                        Rol
+                    </span>
+                </div>
+
+            </div>
+
+        </header>
+
+        <section id="moduleContainer">
+
+            <section
+                id="inicioModule"
+                class="module active-module"
+            >
+
+                <div class="welcome-card">
+
+                    <p class="welcome-label">
+                        Bienvenido
+                    </p>
+
+                    <h2 id="welcomeMessage">
+                        Bienvenido a la Intranet Escolar
+                    </h2>
+
+                    <p>
+                        Desde este panel podrás acceder
+                        a las funciones disponibles para
+                        tu perfil.
+                    </p>
+
+                </div>
+
+                <div class="cards-grid">
+
+                    <article class="info-card">
+                        <span class="card-number">01</span>
+
+                        <h3>Usuarios</h3>
+
+                        <p>
+                            Administración de usuarios
+                            y perfiles.
+                        </p>
+                    </article>
+
+                    <article class="info-card">
+                        <span class="card-number">02</span>
+
+                        <h3>Calificaciones</h3>
+
+                        <p>
+                            Registro y consulta de
+                            información académica.
+                        </p>
+                    </article>
+
+                    <article class="info-card">
+                        <span class="card-number">03</span>
+
+                        <h3>Asistencia</h3>
+
+                        <p>
+                            Control y consulta de
+                            asistencia.
+                        </p>
+                    </article>
+
+                    <article class="info-card">
+                        <span class="card-number">04</span>
+
+                        <h3>Comunicados</h3>
+
+                        <p>
+                            Avisos oficiales de
+                            la institución.
+                        </p>
+                    </article>
+
+                </div>
+
+            </section>
+
+            <section
+                id="usuariosModule"
+                class="module"
+                hidden
+            >
+                <div class="module-header">
+                    <p>Módulo administrativo</p>
+                    <h2>Usuarios</h2>
+                </div>
+
+                <div class="placeholder">
+                    <p>
+                        El módulo de usuarios se
+                        implementará próximamente.
+                    </p>
+                </div>
+            </section>
+
+            <section
+                id="calificacionesModule"
+                class="module"
+                hidden
+            >
+                <div class="module-header">
+                    <p>Módulo académico</p>
+                    <h2>Calificaciones</h2>
+                </div>
+
+                <div class="placeholder">
+                    <p>
+                        El módulo de calificaciones
+                        se implementará próximamente.
+                    </p>
+                </div>
+            </section>
+
+            <section
+                id="asistenciaModule"
+                class="module"
+                hidden
+            >
+                <div class="module-header">
+                    <p>Módulo académico</p>
+                    <h2>Asistencia</h2>
+                </div>
+
+                <div class="placeholder">
+                    <p>
+                        El módulo de asistencia
+                        se implementará próximamente.
+                    </p>
+                </div>
+            </section>
+
+            <section
+                id="comunicadosModule"
+                class="module"
+                hidden
+            >
+                <div class="module-header">
+                    <p>Información institucional</p>
+                    <h2>Comunicados</h2>
+                </div>
+
+                <div class="placeholder">
+                    <p>
+                        El módulo de comunicados
+                        se implementará próximamente.
+                    </p>
+                </div>
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="js/dashboard.js"></script>
+```
+
+</body>
+</html>

@@ -1,22 +1,24 @@
+console.log("LOGIN JS CARGADO");
+
 const usuarios = [
-{
-username: "admin01",
-password: "Admin123",
-role: "administracion",
-name: "Administrador"
-},
-{
-username: "docente01",
-password: "Docente123",
-role: "docente",
-name: "Docente de prueba"
-},
-{
-username: "estudiante01",
-password: "Estudiante123",
-role: "estudiante",
-name: "Estudiante de prueba"
-}
+    {
+        username: "admin",
+        password: "1234",
+        role: "administracion",
+        name: "Administrador"
+    },
+    {
+        username: "docente",
+        password: "1234",
+        role: "docente",
+        name: "Docente de prueba"
+    },
+    {
+        username: "estudiante",
+        password: "1234",
+        role: "estudiante",
+        name: "Estudiante de prueba"
+    }
 ];
 
 const loginForm = document.getElementById("loginForm");
@@ -24,76 +26,80 @@ const usernameInput = document.getElementById("username");
 const passwordInput = document.getElementById("password");
 const loginMessage = document.getElementById("loginMessage");
 
-function mostrarMensaje(mensaje, tipo) {
-loginMessage.textContent = mensaje;
-loginMessage.className = `login-message ${tipo}`;
-}
+console.log("Formulario:", loginForm);
 
-function buscarUsuario(username, password) {
-return usuarios.find(
-usuario =>
-usuario.username === username &&
-usuario.password === password
-);
-}
+if (loginForm) {
 
-function iniciarSesion(usuario) {
-const sesion = {
-username: usuario.username,
-name: usuario.name,
-role: usuario.role
-};
+    loginForm.addEventListener("submit", function(event) {
 
-```
-localStorage.setItem(
-    "usuarioLogueado",
-    JSON.stringify(sesion)
-);
+        event.preventDefault();
 
-mostrarMensaje(
-    "Inicio de sesión correcto.",
-    "success"
-);
+        console.log("LOGIN SUBMIT DETECTADO");
 
-setTimeout(() => {
-    window.location.href = "dashboard.html";
-}, 500);
-```
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
 
-}
+        if (username === "" || password === "") {
 
-loginForm.addEventListener("submit", function (event) {
+            loginMessage.textContent =
+                "Debe completar usuario y contraseña.";
 
-```
-event.preventDefault();
+            loginMessage.className =
+                "login-message error";
 
-const username = usernameInput.value.trim();
-const password = passwordInput.value.trim();
+            return;
+        }
 
-loginMessage.textContent = "";
-loginMessage.className = "login-message";
+        const usuario = usuarios.find(function(usuario) {
 
-if (!username || !password) {
-    mostrarMensaje(
-        "Debe completar usuario y contraseña.",
-        "error"
+            return (
+                usuario.username === username &&
+                usuario.password === password
+            );
+
+        });
+
+        if (!usuario) {
+
+            loginMessage.textContent =
+                "Usuario o contraseña incorrectos.";
+
+            loginMessage.className =
+                "login-message error";
+
+            return;
+        }
+
+        const sesion = {
+            username: usuario.username,
+            name: usuario.name,
+            role: usuario.role
+        };
+
+        localStorage.setItem(
+            "usuarioLogueado",
+            JSON.stringify(sesion)
+        );
+
+        console.log("Sesión guardada correctamente.");
+
+        loginMessage.textContent =
+            "Inicio de sesión correcto.";
+
+        loginMessage.className =
+            "login-message success";
+
+        setTimeout(function() {
+
+            window.location.href = "./dashboard.html";
+
+        }, 500);
+
+    });
+
+} else {
+
+    console.error(
+        "No se encontró el formulario con id loginForm."
     );
-
-    return;
 }
-
-const usuario = buscarUsuario(username, password);
-
-if (!usuario) {
-    mostrarMensaje(
-        "Usuario o contraseña incorrectos.",
-        "error"
-    );
-
-    return;
-}
-
-iniciarSesion(usuario);
-```
-
-});
