@@ -1,7 +1,9 @@
 const usuarioGuardado = localStorage.getItem("usuarioLogueado");
 
 if (!usuarioGuardado) {
+
     window.location.href = "./index.html";
+
 } else {
 
     const usuario = JSON.parse(usuarioGuardado);
@@ -23,9 +25,21 @@ if (!usuarioGuardado) {
         estudiante: "Estudiante / Familia"
     };
 
+
+    // ============================================================
+    // OBTENER NOMBRE DEL ROL
+    // ============================================================
+
     function obtenerRol() {
+
         return roles[usuario.role] || "Usuario";
+
     }
+
+
+    // ============================================================
+    // CARGAR INFORMACIÓN DEL USUARIO
+    // ============================================================
 
     function cargarUsuario() {
 
@@ -33,14 +47,22 @@ if (!usuarioGuardado) {
             usuario.name || usuario.username;
 
         userName.textContent = nombre;
-        userRole.textContent = obtenerRol();
+
+        userRole.textContent =
+            obtenerRol();
 
         userInitial.textContent =
             nombre.charAt(0).toUpperCase();
 
         welcomeMessage.textContent =
             `Bienvenido, ${nombre}`;
+
     }
+
+
+    // ============================================================
+    // APLICAR PERMISOS SEGÚN EL ROL
+    // ============================================================
 
     function aplicarPermisos() {
 
@@ -53,77 +75,161 @@ if (!usuarioGuardado) {
                 requiredRole &&
                 requiredRole !== usuario.role
             ) {
+
                 item.hidden = true;
+
             }
 
         });
+
     }
+
+
+    // ============================================================
+    // MOSTRAR MÓDULO
+    // ============================================================
 
     function mostrarModulo(nombre) {
 
         modules.forEach(module => {
 
             module.hidden = true;
+
             module.classList.remove(
                 "active-module"
             );
 
         });
 
+
         const modulo =
             document.getElementById(
                 `${nombre}Module`
             );
 
+
         if (!modulo) {
+
             return;
+
         }
+
 
         modulo.hidden = false;
 
         modulo.classList.add(
             "active-module"
         );
+
     }
+
+
+    // ============================================================
+    // NAVEGACIÓN DEL DASHBOARD
+    // ============================================================
 
     navItems.forEach(item => {
 
-        item.addEventListener("click", function() {
+        item.addEventListener(
+            "click",
+            function() {
 
-            navItems.forEach(nav => {
-                nav.classList.remove("active");
-            });
+                navItems.forEach(nav => {
 
-            this.classList.add("active");
+                    nav.classList.remove(
+                        "active"
+                    );
 
-            const modulo =
-                this.dataset.module;
+                });
 
-            pageTitle.textContent =
-                this.textContent.trim();
 
-            mostrarModulo(modulo);
+                this.classList.add(
+                    "active"
+                );
 
-        });
+
+                const modulo =
+                    this.dataset.module;
+
+
+                pageTitle.textContent =
+                    this.textContent.trim();
+
+
+                // ------------------------------------------------
+                // MÓDULO DE USUARIOS
+                // ------------------------------------------------
+                // Solo Administración tiene acceso.
+                // Al hacer clic se abre el CRUD de usuarios.
+                // ------------------------------------------------
+
+                if (modulo === "usuarios") {
+
+                    if (
+                        usuario.role !==
+                        "administracion"
+                    ) {
+
+                        alert(
+                            "No tiene permisos para acceder a este módulo."
+                        );
+
+                        return;
+
+                    }
+
+
+                    window.location.href =
+                        "./usuarios.html";
+
+                    return;
+
+                }
+
+
+                // ------------------------------------------------
+                // RESTO DE MÓDULOS
+                // ------------------------------------------------
+
+                mostrarModulo(modulo);
+
+            }
+        );
 
     });
 
-    logoutButton.addEventListener(
-        "click",
-        function() {
 
-            localStorage.removeItem(
-                "usuarioLogueado"
-            );
+    // ============================================================
+    // CERRAR SESIÓN
+    // ============================================================
 
-            window.location.href =
-                "./index.html";
+    if (logoutButton) {
 
-        }
-    );
+        logoutButton.addEventListener(
+            "click",
+            function() {
+
+                localStorage.removeItem(
+                    "usuarioLogueado"
+                );
+
+                window.location.href =
+                    "./index.html";
+
+            }
+        );
+
+    }
+
+
+    // ============================================================
+    // INICIALIZAR DASHBOARD
+    // ============================================================
 
     cargarUsuario();
+
     aplicarPermisos();
+
     mostrarModulo("inicio");
 
 }
