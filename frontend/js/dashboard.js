@@ -14,15 +14,31 @@ if (!usuarioGuardado) {
     const welcomeMessage = document.getElementById("welcomeMessage");
     const pageTitle = document.getElementById("pageTitle");
 
-    const logoutButton = document.getElementById("logoutButton");
+    const logoutButton =
+        document.getElementById("logoutButton");
 
-    const navItems = document.querySelectorAll(".nav-item");
-    const modules = document.querySelectorAll(".module");
+    const navItems =
+        document.querySelectorAll(".nav-item");
+
+    const modules =
+        document.querySelectorAll(".module");
+
+
+    // ============================================================
+    // ROLES
+    // ============================================================
 
     const roles = {
-        administracion: "Administración",
-        docente: "Docente",
-        estudiante: "Estudiante / Familia"
+
+        administracion:
+            "Administración",
+
+        docente:
+            "Docente",
+
+        estudiante:
+            "Estudiante / Familia"
+
     };
 
 
@@ -46,22 +62,45 @@ if (!usuarioGuardado) {
         const nombre =
             usuario.name || usuario.username;
 
-        userName.textContent = nombre;
 
-        userRole.textContent =
-            obtenerRol();
+        if (userName) {
 
-        userInitial.textContent =
-            nombre.charAt(0).toUpperCase();
+            userName.textContent =
+                nombre;
 
-        welcomeMessage.textContent =
-            `Bienvenido, ${nombre}`;
+        }
+
+
+        if (userRole) {
+
+            userRole.textContent =
+                obtenerRol();
+
+        }
+
+
+        if (userInitial) {
+
+            userInitial.textContent =
+                nombre
+                    .charAt(0)
+                    .toUpperCase();
+
+        }
+
+
+        if (welcomeMessage) {
+
+            welcomeMessage.textContent =
+                `Bienvenido, ${nombre}`;
+
+        }
 
     }
 
 
     // ============================================================
-    // APLICAR PERMISOS SEGÚN EL ROL
+    // APLICAR PERMISOS
     // ============================================================
 
     function aplicarPermisos() {
@@ -70,6 +109,7 @@ if (!usuarioGuardado) {
 
             const requiredRole =
                 item.dataset.role;
+
 
             if (
                 requiredRole &&
@@ -125,14 +165,14 @@ if (!usuarioGuardado) {
 
 
     // ============================================================
-    // NAVEGACIÓN DEL DASHBOARD
+    // NAVEGACIÓN
     // ============================================================
 
     navItems.forEach(item => {
 
         item.addEventListener(
             "click",
-            function() {
+            function () {
 
                 navItems.forEach(nav => {
 
@@ -152,18 +192,22 @@ if (!usuarioGuardado) {
                     this.dataset.module;
 
 
-                pageTitle.textContent =
-                    this.textContent.trim();
+                if (pageTitle) {
+
+                    pageTitle.textContent =
+                        this.textContent.trim();
+
+                }
 
 
-                // ------------------------------------------------
-                // MÓDULO DE USUARIOS
-                // ------------------------------------------------
-                // Solo Administración tiene acceso.
-                // Al hacer clic se abre el CRUD de usuarios.
-                // ------------------------------------------------
+                // =================================================
+                // USUARIOS
+                // Solo Administración
+                // =================================================
 
-                if (modulo === "usuarios") {
+                if (
+                    modulo === "usuarios"
+                ) {
 
                     if (
                         usuario.role !==
@@ -171,7 +215,7 @@ if (!usuarioGuardado) {
                     ) {
 
                         alert(
-                            "No tiene permisos para acceder a este módulo."
+                            "No tiene permisos para acceder a Usuarios."
                         );
 
                         return;
@@ -187,11 +231,58 @@ if (!usuarioGuardado) {
                 }
 
 
-                // ------------------------------------------------
-                // RESTO DE MÓDULOS
-                // ------------------------------------------------
+                // =================================================
+                // CALIFICACIONES
+                // Administración, Docente y
+                // Estudiante/Familia
+                // =================================================
 
-                mostrarModulo(modulo);
+                if (
+                    modulo ===
+                    "calificaciones"
+                ) {
+
+                    const rolesPermitidos = [
+
+                        "administracion",
+
+                        "docente",
+
+                        "estudiante"
+
+                    ];
+
+
+                    if (
+                        !rolesPermitidos.includes(
+                            usuario.role
+                        )
+                    ) {
+
+                        alert(
+                            "No tiene permisos para acceder a Calificaciones."
+                        );
+
+                        return;
+
+                    }
+
+
+                    window.location.href =
+                        "./calificaciones.html";
+
+                    return;
+
+                }
+
+
+                // =================================================
+                // OTROS MÓDULOS
+                // =================================================
+
+                mostrarModulo(
+                    modulo
+                );
 
             }
         );
@@ -207,11 +298,12 @@ if (!usuarioGuardado) {
 
         logoutButton.addEventListener(
             "click",
-            function() {
+            function () {
 
                 localStorage.removeItem(
                     "usuarioLogueado"
                 );
+
 
                 window.location.href =
                     "./index.html";
@@ -223,7 +315,7 @@ if (!usuarioGuardado) {
 
 
     // ============================================================
-    // INICIALIZAR DASHBOARD
+    // INICIALIZAR
     // ============================================================
 
     cargarUsuario();
