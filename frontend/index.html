@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Intranet Escolar | Inicio de sesión</title>
+
+<link rel="stylesheet" href="./css/login.css">
+```
+
+</head>
+
+<body>
+
+```
+<main class="login-container">
+
+    <section class="login-card" aria-labelledby="login-title">
+
+        <div class="login-header">
+
+            <div class="logo">
+                IE
+            </div>
+
+            <h1 id="login-title">Intranet Escolar</h1>
+
+            <p>
+                Sistema de gestión interna
+            </p>
+
+        </div>
+
+        <form id="loginForm" novalidate>
+
+            <div class="form-group">
+
+                <label for="username">
+                    Usuario
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Ingrese su usuario"
+                    autocomplete="username"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="password">
+                    Contraseña
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Ingrese su contraseña"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+            <div
+                id="loginMessage"
+                class="login-message"
+                role="alert"
+                aria-live="polite"
+            ></div>
+
+            <button type="submit" class="login-button">
+                Iniciar sesión
+            </button>
+
+        </form>
+
+        <footer class="login-footer">
+            <p>Intranet Escolar © 2026</p>
+        </footer>
+
+    </section>
+
+</main>
+
+<script src="./js/login.js"></script>
+```
+
+</body>
+</html>
