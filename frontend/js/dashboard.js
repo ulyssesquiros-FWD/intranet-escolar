@@ -1,18 +1,32 @@
-const usuarioGuardado = localStorage.getItem("usuarioLogueado");
+const usuarioGuardado =
+    localStorage.getItem("usuarioLogueado");
+
 
 if (!usuarioGuardado) {
 
-    window.location.href = "./index.html";
+    window.location.href =
+        "./index.html";
 
 } else {
 
-    const usuario = JSON.parse(usuarioGuardado);
+    const usuario =
+        JSON.parse(usuarioGuardado);
 
-    const userName = document.getElementById("userName");
-    const userRole = document.getElementById("userRole");
-    const userInitial = document.getElementById("userInitial");
-    const welcomeMessage = document.getElementById("welcomeMessage");
-    const pageTitle = document.getElementById("pageTitle");
+
+    const userName =
+        document.getElementById("userName");
+
+    const userRole =
+        document.getElementById("userRole");
+
+    const userInitial =
+        document.getElementById("userInitial");
+
+    const welcomeMessage =
+        document.getElementById("welcomeMessage");
+
+    const pageTitle =
+        document.getElementById("pageTitle");
 
     const logoutButton =
         document.getElementById("logoutButton");
@@ -43,24 +57,28 @@ if (!usuarioGuardado) {
 
 
     // ============================================================
-    // OBTENER NOMBRE DEL ROL
+    // OBTENER ROL
     // ============================================================
 
     function obtenerRol() {
 
-        return roles[usuario.role] || "Usuario";
+        return (
+            roles[usuario.role] ||
+            "Usuario"
+        );
 
     }
 
 
     // ============================================================
-    // CARGAR INFORMACIÓN DEL USUARIO
+    // CARGAR USUARIO
     // ============================================================
 
     function cargarUsuario() {
 
         const nombre =
-            usuario.name || usuario.username;
+            usuario.name ||
+            usuario.username;
 
 
         if (userName) {
@@ -100,7 +118,7 @@ if (!usuarioGuardado) {
 
 
     // ============================================================
-    // APLICAR PERMISOS
+    // PERMISOS DEL MENÚ
     // ============================================================
 
     function aplicarPermisos() {
@@ -202,7 +220,6 @@ if (!usuarioGuardado) {
 
                 // =================================================
                 // USUARIOS
-                // Solo Administración
                 // =================================================
 
                 if (
@@ -232,9 +249,49 @@ if (!usuarioGuardado) {
 
 
                 // =================================================
+                // ASISTENCIA
+                // =================================================
+
+                if (
+                    modulo === "asistencia"
+                ) {
+
+                    const rolesPermitidos = [
+
+                        "administracion",
+
+                        "docente",
+
+                        "estudiante"
+
+                    ];
+
+
+                    if (
+                        !rolesPermitidos.includes(
+                            usuario.role
+                        )
+                    ) {
+
+                        alert(
+                            "No tiene permisos para acceder a Asistencia."
+                        );
+
+                        return;
+
+                    }
+
+
+                    window.location.href =
+                        "./asistencia.html";
+
+                    return;
+
+                }
+
+
+                // =================================================
                 // CALIFICACIONES
-                // Administración, Docente y
-                // Estudiante/Familia
                 // =================================================
 
                 if (

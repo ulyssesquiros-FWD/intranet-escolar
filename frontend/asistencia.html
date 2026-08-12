@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Intranet Escolar | Asistencia</title>
+
+    <link
+        rel="stylesheet"
+        href="css/asistencia.css"
+    >
+</head>
+
+<body>
+
+    <div class="asistencia-page">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <header class="page-header">
+
+            <div>
+
+                <p class="page-label">
+                    Módulo académico
+                </p>
+
+                <h1>
+                    Asistencia
+                </h1>
+
+                <p class="page-description">
+                    Registro y consulta de asistencia
+                    de los estudiantes.
+                </p>
+
+            </div>
+
+            <a
+                href="dashboard.html"
+                class="back-button"
+            >
+                Volver al dashboard
+            </a>
+
+        </header>
+
+
+        <!-- =====================================================
+             FILTROS
+        ====================================================== -->
+
+        <section class="toolbar">
+
+            <div class="search-box">
+
+                <label for="searchInput">
+                    Buscar
+                </label>
+
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="Nombre del estudiante..."
+                >
+
+            </div>
+
+
+            <div class="filter-box">
+
+                <label for="dateFilter">
+                    Fecha
+                </label>
+
+                <input
+                    type="date"
+                    id="dateFilter"
+                >
+
+            </div>
+
+
+            <div class="filter-box">
+
+                <label for="studentFilter">
+                    Estudiante
+                </label>
+
+                <select id="studentFilter">
+
+                    <option value="todos">
+                        Todos los estudiantes
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="filter-box">
+
+                <label for="statusFilter">
+                    Estado
+                </label>
+
+                <select id="statusFilter">
+
+                    <option value="todos">
+                        Todos los estados
+                    </option>
+
+                    <option value="presente">
+                        Presente
+                    </option>
+
+                    <option value="ausente">
+                        Ausente
+                    </option>
+
+                    <option value="tardia">
+                        Tardía
+                    </option>
+
+                    <option value="justificada">
+                        Justificada
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="newAttendanceButton"
+                class="primary-button"
+            >
+                + Registrar asistencia
+            </button>
+
+        </section>
+
+
+        <!-- =====================================================
+             FORMULARIO
+        ====================================================== -->
+
+        <section
+            id="formSection"
+            class="form-section"
+            hidden
+        >
+
+            <div class="section-title">
+
+                <div>
+
+                    <p>
+                        Registro académico
+                    </p>
+
+                    <h2 id="formTitle">
+                        Nueva asistencia
+                    </h2>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="cancelButton"
+                    class="secondary-button"
+                >
+                    Cancelar
+                </button>
+
+            </div>
+
+
+            <form id="attendanceForm">
+
+                <input
+                    type="hidden"
+                    id="attendanceId"
+                >
+
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="student">
+                            Estudiante *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="student"
+                            placeholder="Nombre del estudiante"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="date">
+                            Fecha *
+                        </label>
+
+                        <input
+                            type="date"
+                            id="date"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="status">
+                            Estado *
+                        </label>
+
+                        <select
+                            id="status"
+                            required
+                        >
+
+                            <option value="">
+                                Seleccione un estado
+                            </option>
+
+                            <option value="presente">
+                                Presente
+                            </option>
+
+                            <option value="ausente">
+                                Ausente
+                            </option>
+
+                            <option value="tardia">
+                                Tardía
+                            </option>
+
+                            <option value="justificada">
+                                Justificada
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="teacher">
+                            Docente *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="teacher"
+                            placeholder="Nombre del docente"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label for="observation">
+                            Observación
+                        </label>
+
+                        <textarea
+                            id="observation"
+                            rows="3"
+                            maxlength="250"
+                            placeholder="Observaciones opcionales..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="formMessage"
+                    class="form-message"
+                    role="alert"
+                ></div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                    >
+                        Guardar asistencia
+                    </button>
+
+                    <button
+                        type="button"
+                        id="cancelButtonBottom"
+                        class="secondary-button"
+                    >
+                        Cancelar
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- =====================================================
+             RESUMEN
+        ====================================================== -->
+
+        <section class="summary-grid">
+
+            <article class="summary-card">
+
+                <span>
+                    Registros
+                </span>
+
+                <strong id="totalCounter">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    Presentes
+                </span>
+
+                <strong id="presentCounter">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    Ausentes
+                </span>
+
+                <strong id="absentCounter">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    Tardías
+                </span>
+
+                <strong id="lateCounter">
+                    0
+                </strong>
+
+            </article>
+
+        </section>
+
+
+        <!-- =====================================================
+             LISTADO
+        ====================================================== -->
+
+        <section class="attendance-section">
+
+            <div class="section-title">
+
+                <div>
+
+                    <p>
+                        Registro académico
+                    </p>
+
+                    <h2>
+                        Control de asistencia
+                    </h2>
+
+                </div>
+
+                <span id="attendanceCounter">
+                    0 registros
+                </span>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Estudiante
+                            </th>
+
+                            <th>
+                                Fecha
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                            <th>
+                                Docente
+                            </th>
+
+                            <th>
+                                Observación
+                            </th>
+
+                            <th>
+                                Acciones
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody
+                        id="attendanceTableBody"
+                    >
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <script src="./js/asistencia.js"></script>
+
+</body>
+
+</html>
