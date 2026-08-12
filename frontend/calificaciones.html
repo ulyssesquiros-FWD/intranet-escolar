@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Intranet Escolar | Calificaciones
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/calificaciones.css"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="calificaciones-page">
+
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <header class="page-header">
+
+            <div>
+
+                <p class="page-label">
+                    Módulo académico
+                </p>
+
+                <h1>
+                    Calificaciones
+                </h1>
+
+                <p class="page-description">
+                    Registro y consulta de calificaciones
+                    académicas.
+                </p>
+
+            </div>
+
+
+            <a
+                href="dashboard.html"
+                class="back-button"
+            >
+                Volver al dashboard
+            </a>
+
+        </header>
+
+
+
+        <!-- =====================================================
+             TOOLBAR
+        ====================================================== -->
+
+        <section class="toolbar">
+
+
+            <div class="search-box">
+
+                <label for="searchInput">
+                    Buscar
+                </label>
+
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="Estudiante o materia..."
+                >
+
+            </div>
+
+
+
+            <div class="filter-box">
+
+                <label for="studentFilter">
+                    Estudiante
+                </label>
+
+                <select id="studentFilter">
+
+                    <option value="todos">
+                        Todos los estudiantes
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <div class="filter-box">
+
+                <label for="subjectFilter">
+                    Materia
+                </label>
+
+                <select id="subjectFilter">
+
+                    <option value="todos">
+                        Todas las materias
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <button
+                type="button"
+                id="newGradeButton"
+                class="primary-button"
+            >
+                + Nueva calificación
+            </button>
+
+
+        </section>
+
+
+
+        <!-- =====================================================
+             FORMULARIO
+        ====================================================== -->
+
+        <section
+            id="formSection"
+            class="form-section"
+            hidden
+        >
+
+
+            <div class="section-title">
+
+                <div>
+
+                    <p>
+                        Registro académico
+                    </p>
+
+                    <h2 id="formTitle">
+                        Nueva calificación
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="cancelButton"
+                    class="secondary-button"
+                >
+                    Cancelar
+                </button>
+
+            </div>
+
+
+
+            <form id="gradeForm">
+
+
+                <input
+                    type="hidden"
+                    id="gradeId"
+                >
+
+
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label for="student">
+                            Estudiante *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="student"
+                            placeholder="Nombre del estudiante"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="subject">
+                            Materia *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="subject"
+                            placeholder="Ej. Matemática"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="period">
+                            Periodo *
+                        </label>
+
+                        <select
+                            id="period"
+                            required
+                        >
+
+                            <option value="">
+                                Seleccione un periodo
+                            </option>
+
+                            <option value="I Periodo">
+                                I Periodo
+                            </option>
+
+                            <option value="II Periodo">
+                                II Periodo
+                            </option>
+
+                            <option value="III Periodo">
+                                III Periodo
+                            </option>
+
+                            <option value="IV Periodo">
+                                IV Periodo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="grade">
+                            Calificación *
+                        </label>
+
+                        <input
+                            type="number"
+                            id="grade"
+                            min="0"
+                            max="100"
+                            step="0.01"
+                            placeholder="0 - 100"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="teacher">
+                            Docente *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="teacher"
+                            placeholder="Nombre del docente"
+                            required
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div
+                    id="formMessage"
+                    class="form-message"
+                    role="alert"
+                ></div>
+
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                        id="saveGradeButton"
+                    >
+                        Guardar calificación
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="cancelButtonBottom"
+                        class="secondary-button"
+                    >
+                        Cancelar
+                    </button>
+
+                </div>
+
+
+            </form>
+
+
+        </section>
+
+
+
+        <!-- =====================================================
+             LISTADO
+        ====================================================== -->
+
+        <section class="grades-section">
+
+
+            <div class="section-title">
+
+                <div>
+
+                    <p>
+                        Registro académico
+                    </p>
+
+                    <h2>
+                        Calificaciones registradas
+                    </h2>
+
+                </div>
+
+
+                <span id="gradeCounter">
+                    0 calificaciones
+                </span>
+
+            </div>
+
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Estudiante
+                            </th>
+
+                            <th>
+                                Materia
+                            </th>
+
+                            <th>
+                                Periodo
+                            </th>
+
+                            <th>
+                                Calificación
+                            </th>
+
+                            <th>
+                                Docente
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                            <th>
+                                Acciones
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody
+                        id="gradesTableBody"
+                    >
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </section>
+
+
+    </div>
+
+
+
+    <script src="./js/calificaciones.js"></script>
+
+</body>
+
+</html>
