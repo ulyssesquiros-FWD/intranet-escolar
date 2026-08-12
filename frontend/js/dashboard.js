@@ -247,6 +247,39 @@ if (!usuarioGuardado) {
 
                 }
 
+// =================================================
+// ESTUDIANTES
+// Administración, Docente y Estudiante
+// =================================================
+
+if (
+    modulo === "estudiantes"
+) {
+
+    const rolesPermitidos = [
+        "administracion",
+        "docente",
+        "estudiante"
+    ];
+
+    if (
+        !rolesPermitidos.includes(
+            usuario.role
+        )
+    ) {
+
+        alert(
+            "No tiene permisos para acceder a Estudiantes."
+        );
+
+        return;
+    }
+
+    window.location.href =
+        "./estudiantes.html";
+
+    return;
+}
 
                 // =================================================
                 // ASISTENCIA
