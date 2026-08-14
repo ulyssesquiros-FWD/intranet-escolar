@@ -41,6 +41,28 @@ Cambios actualmente en desarrollo y que todavía no forman parte de una versión
 
 ---
 
+## [0.1.0] - 2026-08-14
+
+Primera entrega funcional del prototipo.
+
+### Added
+
+* Interfaz frontend completa con módulos: login, dashboard, usuarios, estudiantes, calificaciones y asistencia.
+* Persistencia en `localStorage` para demostración interactiva.
+* Control de roles (Administración, Docente, Estudiante/Familia) y restricciones de acceso en UI.
+* Documentación en Markdown: `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `AGENTS.md`, `docs/requerimientos.md`, `docs/arquitectura.md`.
+* Mejora de seguridad en frontend: hashing de contraseñas (SHA-256) antes de almacenarlas en `localStorage`.
+* Script de arranque en `package.json` para servir `frontend/` con `npx http-server`.
+
+### Changed
+
+* Se actualizó `README.md` con instrucciones de ejecución, advertencias de seguridad y usuarios de prueba.
+
+### Notes
+
+Este es un prototipo para presentación académica. Para producción se recomienda migrar la autenticación y persistencia a un backend seguro con hashing con sal (bcrypt) y sesiones seguras.
+
+
 ## [0.1.0] - Próximamente
 
 Primera versión funcional del prototipo.

@@ -147,3 +147,64 @@ Estudiantes
      │               │
      ▼               ▼
 Calificaciones    Asistencia
+
+---
+
+## Instalación y ejecución local
+
+Este proyecto es un prototipo estático basado en HTML/CSS/JS que utiliza `localStorage` para persistencia en el navegador. Para ejecutar la aplicación en su máquina local hay dos opciones simples:
+
+- Abrir `frontend/index.html` directamente en el navegador (modo demo). Algunas funcionalidades pueden requerir servir los archivos mediante HTTP para evitar restricciones del navegador.
+- Servir la carpeta `frontend/` con un servidor estático. Ejemplo con Python 3:
+
+```bash
+cd frontend
+python -m http.server 3000
+# Abrir: http://localhost:3000
+```
+
+O usando `npx` (si dispone de Node.js/npm):
+
+```bash
+npx http-server ./frontend -p 3000
+# Abrir: http://localhost:3000
+```
+
+## Usuarios de ejemplo (credenciales para pruebas)
+
+Estos usuarios sirven para probar roles y permisos en el prototipo:
+
+- Usuario: `admin` / Contraseña: `1234` — Rol: Administración
+- Usuario: `docente` / Contraseña: `1234` — Rol: Docente
+- Usuario: `estudiante` / Contraseña: `1234` — Rol: Estudiante
+
+Además el módulo de `Usuarios` contiene usuarios iniciales almacenados en `localStorage` (ver `frontend/js/usuarios.js`).
+
+## Uso básico
+
+1. Abra la aplicación en el navegador (`index.html` o servidor local).
+2. Inicie sesión con uno de los usuarios de ejemplo.
+3. El `dashboard` mostrará únicamente las opciones permitidas según el rol.
+4. Los datos (usuarios, estudiantes, calificaciones, asistencias, comunicados) se guardan en `localStorage` del navegador.
+
+## Documentación y memoria del proyecto
+
+- Memoria del agente: [AGENTS.md](AGENTS.md)
+- Requerimientos: [docs/requerimientos.md](docs/requerimientos.md)
+- Arquitectura: [docs/arquitectura.md](docs/arquitectura.md)
+- Contribución: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Historial de cambios: [CHANGELOG.md](CHANGELOG.md)
+
+## Observaciones de seguridad (prototipo)
+
+Este prototipo guarda contraseñas en `localStorage` y en texto claro para facilitar las pruebas de UI. Para una versión productiva es obligatorio:
+
+- Implementar un backend seguro y almacenamiento de contraseñas con hash (bcrypt o similar).
+- No almacenar contraseñas ni datos sensibles en `localStorage`.
+- Añadir autenticación real (tokens de sesión/HTTP-only cookies) y validación del lado servidor.
+
+Nota: Se ha añadido un mecanismo de hashing en el frontend (SHA-256 via Web Crypto) para almacenar contraseñas en `localStorage` como valores hashed en lugar de texto plano en esta versión de prototipo. Esto mejora la seguridad en modo demo, pero no sustituye un backend seguro y almacenamiento con hashing + sal en servidor.
+
+## Licencia
+
+Este proyecto no tiene una licencia especificada. Para incluir una, añada un archivo `LICENSE` o actualice este `README.md`.

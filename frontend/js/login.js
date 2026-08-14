@@ -1,6 +1,14 @@
 console.log("LOGIN JS CARGADO");
 
-const usuarios = [
+async function hashPassword(password) {
+    const enc = new TextEncoder();
+    const data = enc.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+let usuarios = [
     {
         username: "admin",
         password: "1234",
@@ -21,6 +29,30 @@ const usuarios = [
     }
 ];
 
+// Inicializar fuente de usuarios: preferir `localStorage` (migrado),
+// si no existe usar el array por defecto pero con passwords hasheadas.
+async function initUsuarios() {
+    try {
+        const stored = JSON.parse(localStorage.getItem('usuarios'));
+        if (Array.isArray(stored) && stored.length > 0) {
+            console.log('initUsuarios: usuarios encontrados en localStorage', stored.length);
+            usuarios = stored;
+            return;
+        }
+    } catch (e) {
+        // ignore parse errors
+    }
+
+    // Hash passwords of default users so comparison uses hashed values
+    usuarios = await Promise.all(
+        usuarios.map(async u => ({
+            ...u,
+            password: await hashPassword(u.password || '')
+        }))
+    );
+
+}
+
 const loginForm = document.getElementById("loginForm");
 const usernameInput = document.getElementById("username");
 const passwordInput = document.getElementById("password");
@@ -30,7 +62,15 @@ console.log("Formulario:", loginForm);
 
 if (loginForm) {
 
-    loginForm.addEventListener("submit", function(event) {
+    // iniciar la inicialización y esperar en el handler para evitar carreras
+    const initPromise = initUsuarios().catch(err => {
+        console.error('initUsuarios error', err);
+    });
+
+    loginForm.addEventListener("submit", async function(event) {
+
+        // esperar inicialización de usuarios guardados/hasheados
+        await initPromise;
 
         event.preventDefault();
 
@@ -50,14 +90,28 @@ if (loginForm) {
             return;
         }
 
-        const usuario = usuarios.find(function(usuario) {
+        const hashed = await hashPassword(password);
+        console.log('login: hashed password:', hashed);
+        console.log('login: usuarios en memoria:', usuarios.length, usuarios.map(u => u.username));
+
+        let usuario = usuarios.find(function(usuario) {
 
             return (
                 usuario.username === username &&
-                usuario.password === password
+                usuario.password === hashed
             );
 
         });
+
+        // Fallback: normalizar nombres (quitar dígitos finales) para coincidir
+        if (!usuario) {
+            const normalize = name => (name || '').toString().replace(/\d+$/,'');
+            console.log('login: intentando fallback con normalización de usuarios');
+            usuario = usuarios.find(u => normalize(u.username) === normalize(username) && u.password === hashed);
+            if (usuario) {
+                console.log('login: fallback encontró usuario', usuario.username);
+            }
+        }
 
         if (!usuario) {
 
