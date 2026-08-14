@@ -4,223 +4,146 @@ Sistema web de gestión interna para una institución educativa pública.
 
 ## Descripción
 
-La **Intranet Escolar** es un prototipo de aplicación web diseñado para centralizar información y servicios de uso interno de una institución educativa.
+La **Intranet Escolar** es un prototipo de aplicación web desarrollado para centralizar información y servicios de uso interno de una institución educativa.
 
-El sistema permitirá que el personal administrativo, docentes, estudiantes y familias accedan a las funciones que correspondan según su rol.
+El sistema permite que personal administrativo, docentes y estudiantes/familias accedan a las funciones correspondientes según su rol.
 
-El proyecto se desarrolla como una aplicación académica y no está destinado inicialmente a un entorno de producción.
+El proyecto se desarrolla con fines académicos y actualmente funciona como un prototipo web del sistema.
+
+---
 
 ## Objetivo
 
 Construir una intranet escolar funcional que permita:
 
-* Gestionar usuarios.
-* Registrar y consultar calificaciones.
-* Controlar la asistencia.
-* Publicar y consultar comunicados.
-* Mostrar información de acuerdo con el rol del usuario.
-* Mantener una documentación técnica completa utilizando Markdown.
-* Utilizar Git y GitHub para controlar las versiones del proyecto.
+- Gestionar usuarios.
+- Registrar y consultar estudiantes.
+- Registrar y consultar calificaciones.
+- Controlar y consultar asistencia.
+- Mostrar información de acuerdo con el rol del usuario.
+- Mantener documentación técnica del proyecto.
+- Utilizar Git y GitHub para controlar las versiones.
+- Trabajar mediante ramas y Pull Requests.
+
+---
 
 ## Roles del sistema
 
-El sistema contará con tres perfiles principales:
+El sistema cuenta con tres perfiles principales:
 
-| Rol                | Funciones principales                                                         |
-| ------------------ | ----------------------------------------------------------------------------- |
-| Administración     | Gestionar usuarios, administrar información académica y publicar comunicados. |
-| Docente            | Registrar calificaciones, controlar asistencia y consultar comunicados.       |
-| Estudiante/Familia | Consultar calificaciones, asistencia, horarios y comunicados.                 |
+| Rol | Funciones principales |
+|---|---|
+| Administración | Gestionar usuarios, estudiantes, calificaciones y asistencia. |
+| Docente | Consultar estudiantes, registrar calificaciones y controlar asistencia. |
+| Estudiante / Familia | Consultar información de estudiantes, calificaciones y asistencia. |
 
-## Funcionalidades
+El acceso a las funcionalidades se controla mediante el rol almacenado durante la sesión.
+
+---
+
+## Funcionalidades implementadas
 
 ### Autenticación
 
-El sistema contará con un inicio de sesión que permitirá identificar al usuario y determinar las funciones disponibles según su rol.
+El sistema cuenta con un inicio de sesión que permite identificar al usuario y determinar las funciones disponibles según su rol.
+
+Después de iniciar sesión correctamente, el usuario es dirigido al Dashboard correspondiente.
+
+La sesión se mantiene utilizando `localStorage`.
+
+---
+
+### Dashboard
+
+El Dashboard funciona como panel principal del sistema.
+
+Permite:
+
+- Mostrar el nombre del usuario.
+- Mostrar el rol del usuario.
+- Navegar entre los módulos.
+- Mostrar estadísticas de información académica.
+- Cerrar sesión.
+- Aplicar restricciones según el rol.
+
+El Dashboard obtiene información almacenada en `localStorage` para mostrar indicadores dinámicos.
+
+---
 
 ### Gestión de usuarios
 
-El personal de administración podrá:
+El personal de Administración puede:
 
-* Crear usuarios.
-* Consultar usuarios.
-* Editar usuarios.
-* Eliminar usuarios.
-* Asignar roles.
+- Crear usuarios.
+- Consultar usuarios.
+- Editar usuarios.
+- Eliminar usuarios.
+- Asignar roles.
 
-### Módulo académico
+El acceso al módulo de usuarios está restringido al rol de Administración.
 
-El sistema permitirá gestionar información académica, incluyendo:
+---
 
-* Registro de calificaciones.
-* Consulta de calificaciones.
-* Registro de asistencia.
-* Consulta de asistencia.
+### Gestión de estudiantes
 
-### Comunicados
+El módulo de estudiantes permite:
 
-La administración podrá crear comunicados para la comunidad educativa.
+- Registrar estudiantes.
+- Consultar estudiantes.
+- Editar estudiantes.
+- Eliminar estudiantes.
+- Buscar estudiantes.
+- Aplicar filtros.
+- Mantener los registros mediante `localStorage`.
 
-Los usuarios podrán consultar los avisos publicados por la institución.
+Los estudiantes registrados se utilizan posteriormente en los módulos académicos.
 
-## Tecnologías
+---
 
-El proyecto utilizará las siguientes tecnologías:
+### Calificaciones
 
-* HTML
-* CSS
-* JavaScript
-* Node.js
-* Express
-* PostgreSQL
-* Git
-* GitHub
-* Markdown
+El módulo de calificaciones permite:
 
-## Requisitos previos
+- Registrar calificaciones.
+- Consultar calificaciones.
+- Editar calificaciones.
+- Eliminar calificaciones.
+- Buscar registros.
+- Aplicar filtros.
+- Seleccionar estudiantes registrados.
+- Mantener los registros mediante `localStorage`.
 
-Para ejecutar el proyecto se necesitará tener instalado:
+El módulo está integrado con el registro de estudiantes.
 
-* [Node.js](https://nodejs.org/)
-* Git
-* Visual Studio Code
-* PostgreSQL
+---
 
-## Instalación
+### Asistencia
 
-### 1. Clonar el repositorio
+El módulo de asistencia permite:
 
-```bash
-git clone https://github.com/ulyssesquiros-FWD/intranet-escolar.git
-```
+- Registrar asistencia.
+- Consultar registros.
+- Editar registros.
+- Eliminar registros.
+- Buscar información.
+- Aplicar filtros.
+- Seleccionar estudiantes registrados.
+- Mantener los registros mediante `localStorage`.
 
-### 2. Entrar en la carpeta
+El módulo está integrado con el registro de estudiantes.
 
-```bash
-cd intranet-escolar
-```
+---
 
-### 3. Instalar las dependencias
+## Integración entre módulos
 
-```bash
-npm install
-```
+Los módulos académicos utilizan información compartida mediante `localStorage`.
 
-### 4. Configurar las variables de entorno
-
-Se utilizará un archivo `.env` para almacenar la configuración sensible de la aplicación.
-
-Ejemplo:
-
-```env
-PORT=3000
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=intranet_escolar
-DB_USER=postgres
-DB_PASSWORD=tu_password
-```
-
-El archivo `.env` no debe subirse al repositorio porque está incluido en `.gitignore`.
-
-### 5. Ejecutar el proyecto
-
-Cuando el backend esté implementado, se podrá iniciar mediante:
-
-```bash
-npm start
-```
-
-## Ejemplo de uso
-
-Un usuario ingresa al sistema utilizando sus credenciales.
+El flujo principal de integración es:
 
 ```text
-Usuario: docente01
-Contraseña: ********
-Rol: Docente
-```
-
-Después de iniciar sesión, el sistema mostrará el panel correspondiente al rol del usuario.
-
-Por ejemplo, un docente podrá acceder a:
-
-1. Calificaciones.
-2. Asistencia.
-3. Comunicados.
-
-Un estudiante o familiar podrá consultar la información que le corresponda, sin acceder a las funciones administrativas.
-
-## Estructura del proyecto
-
-```text
-intranet-escolar/
-│
-├── backend/
-│
-├── docs/
-│
-├── frontend/
-│   ├── css/
-│   └── js/
-│
-├── .gitignore
-├── package.json
-├── README.md
-├── CONTRIBUTING.md
-├── CHANGELOG.md
-└── AGENTS.md
-```
-
-## Estado del proyecto
-
-Actualmente el proyecto se encuentra en fase inicial de desarrollo.
-
-### Progreso
-
-* [x] Crear repositorio Git.
-* [x] Crear estructura inicial.
-* [x] Configurar `.gitignore`.
-* [x] Crear `package.json`.
-* [x] Conectar repositorio con GitHub.
-* [x] Crear README.
-* [ ] Crear documentación de arquitectura.
-* [ ] Definir requerimientos detallados.
-* [ ] Crear memoria del agente.
-* [ ] Implementar autenticación.
-* [ ] Implementar gestión de usuarios.
-* [ ] Implementar módulo académico.
-* [ ] Implementar asistencia.
-* [ ] Implementar comunicados.
-* [ ] Realizar pruebas.
-* [ ] Completar documentación.
-* [ ] Preparar versión final.
-
-## Documentación
-
-La documentación del proyecto se encuentra dentro de la carpeta `docs/`.
-
-Los documentos principales serán:
-
-* `docs/arquitectura.md` — decisiones técnicas y estructura del sistema.
-* `docs/requerimientos.md` — requerimientos funcionales y no funcionales.
-* `AGENTS.md` — memoria del proyecto para asistentes de código.
-* `CONTRIBUTING.md` — reglas de colaboración.
-* `CHANGELOG.md` — historial de cambios.
-
-## Accesibilidad y privacidad
-
-El proyecto busca mantener una interfaz clara y accesible, considerando:
-
-* Contraste adecuado.
-* Etiquetas para los campos de formularios.
-* Navegación mediante teclado.
-* Separación de permisos según el rol.
-* Protección de información personal.
-* No exposición innecesaria de datos sensibles.
-
-## Licencia
-
-Este proyecto se desarrolla con fines académicos para el proyecto final de Intranet Escolar.
-
-Copyright © 2026 — Proyecto Intranet Escolar.
+Estudiantes
+     │
+     ├───────────────┐
+     │               │
+     ▼               ▼
+Calificaciones    Asistencia
