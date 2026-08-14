@@ -1,3 +1,7 @@
+// ============================================================
+// CONTROL DE SESIÓN
+// ============================================================
+
 const usuarioGuardado =
     localStorage.getItem("usuarioLogueado");
 
@@ -12,6 +16,10 @@ if (!usuarioGuardado) {
     const usuario =
         JSON.parse(usuarioGuardado);
 
+
+    // ============================================================
+    // ELEMENTOS DEL DASHBOARD
+    // ============================================================
 
     const userName =
         document.getElementById("userName");
@@ -71,14 +79,15 @@ if (!usuarioGuardado) {
 
 
     // ============================================================
-    // CARGAR USUARIO
+    // CARGAR INFORMACIÓN DEL USUARIO
     // ============================================================
 
     function cargarUsuario() {
 
         const nombre =
             usuario.name ||
-            usuario.username;
+            usuario.username ||
+            "Usuario";
 
 
         if (userName) {
@@ -123,22 +132,29 @@ if (!usuarioGuardado) {
 
     function aplicarPermisos() {
 
-        navItems.forEach(item => {
+        navItems.forEach(
+            item => {
 
-            const requiredRole =
-                item.dataset.role;
+                const requiredRole =
+                    item.dataset.role;
 
 
-            if (
-                requiredRole &&
-                requiredRole !== usuario.role
-            ) {
+                if (
 
-                item.hidden = true;
+                    requiredRole &&
+
+                    requiredRole !==
+                        usuario.role
+
+                ) {
+
+                    item.hidden =
+                        true;
+
+                }
 
             }
-
-        });
+        );
 
     }
 
@@ -147,17 +163,23 @@ if (!usuarioGuardado) {
     // MOSTRAR MÓDULO
     // ============================================================
 
-    function mostrarModulo(nombre) {
+    function mostrarModulo(
+        nombre
+    ) {
 
-        modules.forEach(module => {
+        modules.forEach(
+            module => {
 
-            module.hidden = true;
+                module.hidden =
+                    true;
 
-            module.classList.remove(
-                "active-module"
-            );
 
-        });
+                module.classList.remove(
+                    "active-module"
+                );
+
+            }
+        );
 
 
         const modulo =
@@ -173,7 +195,9 @@ if (!usuarioGuardado) {
         }
 
 
-        modulo.hidden = false;
+        modulo.hidden =
+            false;
+
 
         modulo.classList.add(
             "active-module"
@@ -183,56 +207,580 @@ if (!usuarioGuardado) {
 
 
     // ============================================================
+    // LEER DATOS DE LOCALSTORAGE
+    // ============================================================
+
+    function obtenerArrayLocalStorage(
+        clave
+    ) {
+
+        try {
+
+            const datos =
+                JSON.parse(
+                    localStorage.getItem(
+                        clave
+                    )
+                );
+
+
+            return Array.isArray(
+                datos
+            )
+                ? datos
+                : [];
+
+        } catch (error) {
+
+            console.error(
+                `Error leyendo ${clave}:`,
+                error
+            );
+
+
+            return [];
+
+        }
+
+    }
+
+
+    // ============================================================
+    // ESTADÍSTICAS DEL SISTEMA
+    // ============================================================
+
+    function obtenerEstadisticas() {
+
+        const estudiantes =
+            obtenerArrayLocalStorage(
+                "estudiantes"
+            );
+
+
+        const calificaciones =
+            obtenerArrayLocalStorage(
+                "calificaciones"
+            );
+
+
+        const asistencias =
+            obtenerArrayLocalStorage(
+                "asistencias"
+            );
+
+
+        const usuarios =
+            obtenerArrayLocalStorage(
+                "usuarios"
+            );
+
+
+        // --------------------------------------------------------
+        // ESTUDIANTES
+        // --------------------------------------------------------
+
+        const totalEstudiantes =
+            estudiantes.length;
+
+
+        // --------------------------------------------------------
+        // CALIFICACIONES
+        // --------------------------------------------------------
+
+        const totalCalificaciones =
+            calificaciones.length;
+
+
+        // --------------------------------------------------------
+        // ASISTENCIA
+        // --------------------------------------------------------
+
+        const totalAsistencias =
+            asistencias.length;
+
+
+        const presentes =
+            asistencias.filter(
+                item =>
+                    item.status ===
+                    "presente"
+            ).length;
+
+
+        const tardias =
+            asistencias.filter(
+                item =>
+                    item.status ===
+                    "tardia"
+            ).length;
+
+
+        const asistenciasFavorables =
+            presentes +
+            tardias;
+
+
+        let porcentajeAsistencia =
+            0;
+
+
+        if (
+            totalAsistencias > 0
+        ) {
+
+            porcentajeAsistencia =
+                Math.round(
+                    (
+                        asistenciasFavorables /
+                        totalAsistencias
+                    ) *
+                    100
+                );
+
+        }
+
+
+        return {
+
+            estudiantes:
+                totalEstudiantes,
+
+            calificaciones:
+                totalCalificaciones,
+
+            asistencias:
+                totalAsistencias,
+
+            presentes:
+                presentes,
+
+            tardias:
+                tardias,
+
+            porcentajeAsistencia:
+                porcentajeAsistencia,
+
+            usuarios:
+                usuarios.length
+
+        };
+
+    }
+
+
+    // ============================================================
+    // ACTUALIZAR ESTADÍSTICAS EN EL DASHBOARD
+    // ============================================================
+
+    function actualizarEstadisticas() {
+
+        const estadisticas =
+            obtenerEstadisticas();
+
+
+        // --------------------------------------------------------
+        // ESTUDIANTES
+        // --------------------------------------------------------
+
+        const totalStudents =
+            document.getElementById(
+                "totalStudents"
+            );
+
+
+        if (totalStudents) {
+
+            totalStudents.textContent =
+                estadisticas.estudiantes;
+
+        }
+
+
+        // --------------------------------------------------------
+        // CALIFICACIONES
+        // --------------------------------------------------------
+
+        const totalGrades =
+            document.getElementById(
+                "totalGrades"
+            );
+
+
+        if (totalGrades) {
+
+            totalGrades.textContent =
+                estadisticas.calificaciones;
+
+        }
+
+
+        // --------------------------------------------------------
+        // ASISTENCIA
+        // --------------------------------------------------------
+
+        const attendancePercentage =
+            document.getElementById(
+                "attendancePercentage"
+            );
+
+
+        if (attendancePercentage) {
+
+            attendancePercentage.textContent =
+                `${estadisticas.porcentajeAsistencia}%`;
+
+        }
+
+
+        // --------------------------------------------------------
+        // USUARIOS
+        // --------------------------------------------------------
+
+        const totalUsers =
+            document.getElementById(
+                "totalUsers"
+            );
+
+
+        if (totalUsers) {
+
+            totalUsers.textContent =
+                estadisticas.usuarios;
+
+        }
+
+
+        // --------------------------------------------------------
+        // DETALLES
+        // --------------------------------------------------------
+
+        const studentsDescription =
+            document.getElementById(
+                "studentsDescription"
+            );
+
+
+        if (studentsDescription) {
+
+            studentsDescription.textContent =
+
+                `${estadisticas.estudiantes} estudiante${
+                    estadisticas.estudiantes === 1
+                        ? ""
+                        : "s"
+                } registrado${
+                    estadisticas.estudiantes === 1
+                        ? ""
+                        : "s"
+                }.`;
+
+        }
+
+
+        const gradesDescription =
+            document.getElementById(
+                "gradesDescription"
+            );
+
+
+        if (gradesDescription) {
+
+            gradesDescription.textContent =
+
+                `${estadisticas.calificaciones} calificación${
+                    estadisticas.calificaciones === 1
+                        ? ""
+                        : "es"
+                } registrada${
+                    estadisticas.calificaciones === 1
+                        ? ""
+                        : "s"
+                }.`;
+
+        }
+
+
+        const attendanceDescription =
+            document.getElementById(
+                "attendanceDescription"
+            );
+
+
+        if (attendanceDescription) {
+
+            attendanceDescription.textContent =
+
+                `${estadisticas.porcentajeAsistencia}% de asistencia registrada.`;
+
+        }
+
+
+        const usersDescription =
+            document.getElementById(
+                "usersDescription"
+            );
+
+
+        if (usersDescription) {
+
+            if (
+                estadisticas.usuarios > 0
+            ) {
+
+                usersDescription.textContent =
+
+                    `${estadisticas.usuarios} usuario${
+                        estadisticas.usuarios === 1
+                            ? ""
+                            : "s"
+                    } registrado${
+                        estadisticas.usuarios === 1
+                            ? ""
+                            : "s"
+                    }.`;
+
+            } else {
+
+                usersDescription.textContent =
+                    "Administración de usuarios y perfiles.";
+
+            }
+
+        }
+
+    }
+
+
+    // ============================================================
     // NAVEGACIÓN
     // ============================================================
 
-    navItems.forEach(item => {
+    navItems.forEach(
+        item => {
 
-        item.addEventListener(
-            "click",
-            function () {
+            item.addEventListener(
+                "click",
+                function () {
 
-                navItems.forEach(nav => {
+                    navItems.forEach(
+                        nav => {
 
-                    nav.classList.remove(
+                            nav.classList.remove(
+                                "active"
+                            );
+
+                        }
+                    );
+
+
+                    this.classList.add(
                         "active"
                     );
 
-                });
+
+                    const modulo =
+                        this.dataset.module;
 
 
-                this.classList.add(
-                    "active"
-                );
+                    if (pageTitle) {
+
+                        pageTitle.textContent =
+                            this.textContent.trim();
+
+                    }
 
 
-                const modulo =
-                    this.dataset.module;
-
-
-                if (pageTitle) {
-
-                    pageTitle.textContent =
-                        this.textContent.trim();
-
-                }
-
-
-                // =================================================
-                // USUARIOS
-                // =================================================
-
-                if (
-                    modulo === "usuarios"
-                ) {
+                    // =================================================
+                    // INICIO
+                    // =================================================
 
                     if (
-                        usuario.role !==
-                        "administracion"
+                        modulo ===
+                        "inicio"
                     ) {
 
-                        alert(
-                            "No tiene permisos para acceder a Usuarios."
+                        mostrarModulo(
+                            "inicio"
+                        );
+
+                        actualizarEstadisticas();
+
+                        return;
+
+                    }
+
+
+                    // =================================================
+                    // USUARIOS
+                    // =================================================
+
+                    if (
+                        modulo ===
+                        "usuarios"
+                    ) {
+
+                        if (
+                            usuario.role !==
+                            "administracion"
+                        ) {
+
+                            alert(
+                                "No tiene permisos para acceder a Usuarios."
+                            );
+
+                            return;
+
+                        }
+
+
+                        window.location.href =
+                            "./usuarios.html";
+
+                        return;
+
+                    }
+
+
+                    // =================================================
+                    // ESTUDIANTES
+                    // =================================================
+
+                    if (
+                        modulo ===
+                        "estudiantes"
+                    ) {
+
+                        const rolesPermitidos = [
+
+                            "administracion",
+
+                            "docente",
+
+                            "estudiante"
+
+                        ];
+
+
+                        if (
+                            !rolesPermitidos.includes(
+                                usuario.role
+                            )
+                        ) {
+
+                            alert(
+                                "No tiene permisos para acceder a Estudiantes."
+                            );
+
+                            return;
+
+                        }
+
+
+                        window.location.href =
+                            "./estudiantes.html";
+
+                        return;
+
+                    }
+
+
+                    // =================================================
+                    // CALIFICACIONES
+                    // =================================================
+
+                    if (
+                        modulo ===
+                        "calificaciones"
+                    ) {
+
+                        const rolesPermitidos = [
+
+                            "administracion",
+
+                            "docente",
+
+                            "estudiante"
+
+                        ];
+
+
+                        if (
+                            !rolesPermitidos.includes(
+                                usuario.role
+                            )
+                        ) {
+
+                            alert(
+                                "No tiene permisos para acceder a Calificaciones."
+                            );
+
+                            return;
+
+                        }
+
+
+                        window.location.href =
+                            "./calificaciones.html";
+
+                        return;
+
+                    }
+
+
+                    // =================================================
+                    // ASISTENCIA
+                    // =================================================
+
+                    if (
+                        modulo ===
+                        "asistencia"
+                    ) {
+
+                        const rolesPermitidos = [
+
+                            "administracion",
+
+                            "docente",
+
+                            "estudiante"
+
+                        ];
+
+
+                        if (
+                            !rolesPermitidos.includes(
+                                usuario.role
+                            )
+                        ) {
+
+                            alert(
+                                "No tiene permisos para acceder a Asistencia."
+                            );
+
+                            return;
+
+                        }
+
+
+                        window.location.href =
+                            "./asistencia.html";
+
+                        return;
+
+                    }
+
+
+                    // =================================================
+                    // COMUNICADOS
+                    // =================================================
+
+                    if (
+                        modulo ===
+                        "comunicados"
+                    ) {
+
+                        mostrarModulo(
+                            "comunicados"
                         );
 
                         return;
@@ -240,144 +788,19 @@ if (!usuarioGuardado) {
                     }
 
 
-                    window.location.href =
-                        "./usuarios.html";
+                    // =================================================
+                    // OTROS MÓDULOS
+                    // =================================================
 
-                    return;
-
-                }
-
-// =================================================
-// ESTUDIANTES
-// Administración, Docente y Estudiante
-// =================================================
-
-if (
-    modulo === "estudiantes"
-) {
-
-    const rolesPermitidos = [
-        "administracion",
-        "docente",
-        "estudiante"
-    ];
-
-    if (
-        !rolesPermitidos.includes(
-            usuario.role
-        )
-    ) {
-
-        alert(
-            "No tiene permisos para acceder a Estudiantes."
-        );
-
-        return;
-    }
-
-    window.location.href =
-        "./estudiantes.html";
-
-    return;
-}
-
-                // =================================================
-                // ASISTENCIA
-                // =================================================
-
-                if (
-                    modulo === "asistencia"
-                ) {
-
-                    const rolesPermitidos = [
-
-                        "administracion",
-
-                        "docente",
-
-                        "estudiante"
-
-                    ];
-
-
-                    if (
-                        !rolesPermitidos.includes(
-                            usuario.role
-                        )
-                    ) {
-
-                        alert(
-                            "No tiene permisos para acceder a Asistencia."
-                        );
-
-                        return;
-
-                    }
-
-
-                    window.location.href =
-                        "./asistencia.html";
-
-                    return;
+                    mostrarModulo(
+                        modulo
+                    );
 
                 }
+            );
 
-
-                // =================================================
-                // CALIFICACIONES
-                // =================================================
-
-                if (
-                    modulo ===
-                    "calificaciones"
-                ) {
-
-                    const rolesPermitidos = [
-
-                        "administracion",
-
-                        "docente",
-
-                        "estudiante"
-
-                    ];
-
-
-                    if (
-                        !rolesPermitidos.includes(
-                            usuario.role
-                        )
-                    ) {
-
-                        alert(
-                            "No tiene permisos para acceder a Calificaciones."
-                        );
-
-                        return;
-
-                    }
-
-
-                    window.location.href =
-                        "./calificaciones.html";
-
-                    return;
-
-                }
-
-
-                // =================================================
-                // OTROS MÓDULOS
-                // =================================================
-
-                mostrarModulo(
-                    modulo
-                );
-
-            }
-        );
-
-    });
+        }
+    );
 
 
     // ============================================================
@@ -405,6 +828,20 @@ if (
 
 
     // ============================================================
+    // ACTUALIZAR SI CAMBIAN LOS DATOS
+    // ============================================================
+
+    window.addEventListener(
+        "storage",
+        function () {
+
+            actualizarEstadisticas();
+
+        }
+    );
+
+
+    // ============================================================
     // INICIALIZAR
     // ============================================================
 
@@ -412,6 +849,10 @@ if (
 
     aplicarPermisos();
 
-    mostrarModulo("inicio");
+    actualizarEstadisticas();
+
+    mostrarModulo(
+        "inicio"
+    );
 
 }

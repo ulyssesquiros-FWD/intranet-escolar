@@ -1,35 +1,70 @@
 <!DOCTYPE html>
-
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-```
-<title>Intranet Escolar | Dashboard</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<link rel="stylesheet" href="./css/dashboard.css">
-```
+    <title>
+        Intranet Escolar | Dashboard
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="./css/dashboard.css"
+    >
 
 </head>
 
+
 <body>
 
-```
 <div class="dashboard">
+
+
+    <!-- ======================================================
+         SIDEBAR
+    ======================================================= -->
 
     <aside class="sidebar">
 
+
         <div class="sidebar-header">
-            <div class="logo">IE</div>
+
+            <div class="logo">
+                IE
+            </div>
+
 
             <div>
-                <h2>Intranet Escolar</h2>
-                <span>Sistema interno</span>
+
+                <h2>
+                    Intranet Escolar
+                </h2>
+
+                <span>
+                    Sistema interno
+                </span>
+
             </div>
+
         </div>
 
-        <nav class="sidebar-nav" aria-label="Navegación principal">
+
+        <!-- ==================================================
+             NAVEGACIÓN
+        =================================================== -->
+
+        <nav
+            class="sidebar-nav"
+            aria-label="Navegación principal"
+        >
+
 
             <button
                 type="button"
@@ -38,6 +73,7 @@
             >
                 Inicio
             </button>
+
 
             <button
                 type="button"
@@ -48,6 +84,16 @@
                 Usuarios
             </button>
 
+
+            <button
+                type="button"
+                class="nav-item"
+                data-module="estudiantes"
+            >
+                Estudiantes
+            </button>
+
+
             <button
                 type="button"
                 class="nav-item"
@@ -56,6 +102,7 @@
                 Calificaciones
             </button>
 
+
             <button
                 type="button"
                 class="nav-item"
@@ -63,12 +110,8 @@
             >
                 Asistencia
             </button>
-<button
-    class="nav-item"
-    data-module="estudiantes"
->
-    Estudiantes
-</button>
+
+
             <button
                 type="button"
                 class="nav-item"
@@ -77,7 +120,13 @@
                 Comunicados
             </button>
 
+
         </nav>
+
+
+        <!-- ==================================================
+             CERRAR SESIÓN
+        =================================================== -->
 
         <button
             type="button"
@@ -87,58 +136,99 @@
             Cerrar sesión
         </button>
 
+
     </aside>
+
+
+    <!-- ======================================================
+         CONTENIDO PRINCIPAL
+    ======================================================= -->
 
     <main class="main-content">
 
+
+        <!-- ==================================================
+             TOPBAR
+        =================================================== -->
+
         <header class="topbar">
 
+
             <div>
+
                 <p class="topbar-label">
                     Panel principal
                 </p>
 
+
                 <h1 id="pageTitle">
                     Inicio
                 </h1>
+
             </div>
+
 
             <div class="user-info">
 
+
                 <div class="user-avatar">
-                    <span id="userInitial">U</span>
+
+                    <span id="userInitial">
+                        U
+                    </span>
+
                 </div>
 
+
                 <div>
+
                     <strong id="userName">
                         Usuario
                     </strong>
 
+
                     <span id="userRole">
                         Rol
                     </span>
+
                 </div>
+
 
             </div>
 
+
         </header>
 
+
+        <!-- ==================================================
+             MÓDULOS
+        =================================================== -->
+
         <section id="moduleContainer">
+
+
+            <!-- =================================================
+                 INICIO
+            ================================================== -->
 
             <section
                 id="inicioModule"
                 class="module active-module"
             >
 
+
                 <div class="welcome-card">
+
 
                     <p class="welcome-label">
                         Bienvenido
                     </p>
 
+
                     <h2 id="welcomeMessage">
                         Bienvenido a la Intranet Escolar
                     </h2>
+
 
                     <p>
                         Desde este panel podrás acceder
@@ -146,138 +236,369 @@
                         tu perfil.
                     </p>
 
+
                 </div>
+
+
+                <!-- =============================================
+                     ESTADÍSTICAS
+                ============================================== -->
 
                 <div class="cards-grid">
 
-                    <article class="info-card">
-                        <span class="card-number">01</span>
 
-                        <h3>Usuarios</h3>
+                    <!-- USUARIOS -->
 
-                        <p>
+                    <article
+                        class="info-card"
+                    >
+
+                        <span class="card-number">
+                            01
+                        </span>
+
+
+                        <h3>
+                            Usuarios
+                        </h3>
+
+
+                        <strong
+                            id="totalUsers"
+                            class="dashboard-number"
+                        >
+                            0
+                        </strong>
+
+
+                        <p id="usersDescription">
                             Administración de usuarios
                             y perfiles.
                         </p>
+
                     </article>
 
-                    <article class="info-card">
-                        <span class="card-number">02</span>
 
-                        <h3>Calificaciones</h3>
+                    <!-- ESTUDIANTES -->
 
-                        <p>
-                            Registro y consulta de
-                            información académica.
+                    <article
+                        class="info-card"
+                    >
+
+                        <span class="card-number">
+                            02
+                        </span>
+
+
+                        <h3>
+                            Estudiantes
+                        </h3>
+
+
+                        <strong
+                            id="totalStudents"
+                            class="dashboard-number"
+                        >
+                            0
+                        </strong>
+
+
+                        <p id="studentsDescription">
+                            Estudiantes registrados.
                         </p>
+
                     </article>
 
-                    <article class="info-card">
-                        <span class="card-number">03</span>
 
-                        <h3>Asistencia</h3>
+                    <!-- CALIFICACIONES -->
 
-                        <p>
-                            Control y consulta de
-                            asistencia.
+                    <article
+                        class="info-card"
+                    >
+
+                        <span class="card-number">
+                            03
+                        </span>
+
+
+                        <h3>
+                            Calificaciones
+                        </h3>
+
+
+                        <strong
+                            id="totalGrades"
+                            class="dashboard-number"
+                        >
+                            0
+                        </strong>
+
+
+                        <p id="gradesDescription">
+                            Calificaciones registradas.
                         </p>
+
                     </article>
 
-                    <article class="info-card">
-                        <span class="card-number">04</span>
 
-                        <h3>Comunicados</h3>
+                    <!-- ASISTENCIA -->
 
-                        <p>
-                            Avisos oficiales de
-                            la institución.
+                    <article
+                        class="info-card"
+                    >
+
+                        <span class="card-number">
+                            04
+                        </span>
+
+
+                        <h3>
+                            Asistencia
+                        </h3>
+
+
+                        <strong
+                            id="attendancePercentage"
+                            class="dashboard-number"
+                        >
+                            0%
+                        </strong>
+
+
+                        <p id="attendanceDescription">
+                            No hay registros de asistencia.
                         </p>
+
                     </article>
+
 
                 </div>
 
+
+                <!-- =============================================
+                     RESUMEN
+                ============================================== -->
+
+                <div class="welcome-card dashboard-summary">
+
+
+                    <p class="welcome-label">
+                        Resumen del sistema
+                    </p>
+
+
+                    <h2>
+                        Información académica
+                    </h2>
+
+
+                    <p>
+                        Los indicadores mostrados en este
+                        panel se calculan automáticamente
+                        utilizando la información almacenada
+                        en el sistema.
+                    </p>
+
+
+                </div>
+
+
             </section>
+
+
+            <!-- =================================================
+                 USUARIOS
+            ================================================== -->
 
             <section
                 id="usuariosModule"
                 class="module"
                 hidden
             >
+
                 <div class="module-header">
-                    <p>Módulo administrativo</p>
-                    <h2>Usuarios</h2>
+
+                    <p>
+                        Módulo administrativo
+                    </p>
+
+                    <h2>
+                        Usuarios
+                    </h2>
+
                 </div>
 
+
                 <div class="placeholder">
+
                     <p>
                         El módulo de usuarios se
-                        implementará próximamente.
+                        administra desde su sección
+                        correspondiente.
                     </p>
+
                 </div>
+
             </section>
+
+
+            <!-- =================================================
+                 ESTUDIANTES
+            ================================================== -->
+
+            <section
+                id="estudiantesModule"
+                class="module"
+                hidden
+            >
+
+                <div class="module-header">
+
+                    <p>
+                        Módulo académico
+                    </p>
+
+                    <h2>
+                        Estudiantes
+                    </h2>
+
+                </div>
+
+
+                <div class="placeholder">
+
+                    <p>
+                        Utiliza el menú Estudiantes
+                        para acceder al registro
+                        académico.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 CALIFICACIONES
+            ================================================== -->
 
             <section
                 id="calificacionesModule"
                 class="module"
                 hidden
             >
+
                 <div class="module-header">
-                    <p>Módulo académico</p>
-                    <h2>Calificaciones</h2>
+
+                    <p>
+                        Módulo académico
+                    </p>
+
+                    <h2>
+                        Calificaciones
+                    </h2>
+
                 </div>
 
+
                 <div class="placeholder">
+
                     <p>
-                        El módulo de calificaciones
-                        se implementará próximamente.
+                        Utiliza el menú Calificaciones
+                        para registrar y consultar
+                        información académica.
                     </p>
+
                 </div>
+
             </section>
+
+
+            <!-- =================================================
+                 ASISTENCIA
+            ================================================== -->
 
             <section
                 id="asistenciaModule"
                 class="module"
                 hidden
             >
+
                 <div class="module-header">
-                    <p>Módulo académico</p>
-                    <h2>Asistencia</h2>
+
+                    <p>
+                        Módulo académico
+                    </p>
+
+                    <h2>
+                        Asistencia
+                    </h2>
+
                 </div>
 
+
                 <div class="placeholder">
+
                     <p>
-                        El módulo de asistencia
-                        se implementará próximamente.
+                        Utiliza el menú Asistencia
+                        para registrar y consultar
+                        asistencia.
                     </p>
+
                 </div>
+
             </section>
+
+
+            <!-- =================================================
+                 COMUNICADOS
+            ================================================== -->
 
             <section
                 id="comunicadosModule"
                 class="module"
                 hidden
             >
+
                 <div class="module-header">
-                    <p>Información institucional</p>
-                    <h2>Comunicados</h2>
+
+                    <p>
+                        Información institucional
+                    </p>
+
+                    <h2>
+                        Comunicados
+                    </h2>
+
                 </div>
 
+
                 <div class="placeholder">
+
                     <p>
-                        El módulo de comunicados
-                        se implementará próximamente.
+                        Los comunicados institucionales
+                        estarán disponibles próximamente.
                     </p>
+
                 </div>
+
             </section>
+
 
         </section>
 
+
     </main>
+
 
 </div>
 
-<script src="js/dashboard.js"></script>
-```
+
+<script
+    src="./js/dashboard.js"
+></script>
+
 
 </body>
+
 </html>
