@@ -1,36 +1,81 @@
 const usuariosIniciales = [
     {
         id: 1,
-        username: "admin01",
+        username: "admin",
         name: "Administrador",
         email: "admin@intranet.local",
         role: "administracion",
         status: "activo",
-        password: "Admin123"
+        password: "1234"
     },
     {
         id: 2,
-        username: "docente01",
+        username: "docente",
         name: "Docente de prueba",
         email: "docente@intranet.local",
         role: "docente",
         status: "activo",
-        password: "Docente123"
+        password: "1234"
     },
     {
         id: 3,
-        username: "estudiante01",
+        username: "estudiante",
         name: "Estudiante de prueba",
         email: "estudiante@intranet.local",
         role: "estudiante",
         status: "activo",
-        password: "Estudiante123"
+        password: "1234"
     }
 ];
 
-let usuarios = JSON.parse(
-    localStorage.getItem("usuarios")
-) || usuariosIniciales;
+let usuarios = [];
+
+async function hashPassword(password) {
+    const enc = new TextEncoder();
+    const data = enc.encode(password || '');
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function migrateOrSeedUsuarios() {
+    const storedRaw = localStorage.getItem("usuarios");
+    const stored = storedRaw ? JSON.parse(storedRaw) : null;
+
+    if (stored && Array.isArray(stored) && stored.length > 0) {
+        // Migrate plaintext passwords to hashed (best-effort)
+        for (const u of stored) {
+            if (!u.password || !/^[0-9a-f]{64}$/.test(u.password)) {
+                u.password = await hashPassword(u.password || '');
+            }
+        }
+
+        // Ensure default usernames exist (don't overwrite existing users)
+        const storedUsernames = new Set(stored.map(u => u.username));
+        const missingDefaults = usuariosIniciales.filter(d => !storedUsernames.has(d.username));
+
+        if (missingDefaults.length > 0) {
+            const hashedMissing = await Promise.all(
+                missingDefaults.map(async u => ({ ...u, password: await hashPassword(u.password || '') }))
+            );
+            usuarios = stored.concat(hashedMissing);
+            guardarUsuarios();
+        } else {
+            usuarios = stored;
+        }
+
+    } else {
+        // Seed initial users with hashed passwords
+        usuarios = await Promise.all(
+            usuariosIniciales.map(async u => ({
+                ...u,
+                password: await hashPassword(u.password || '')
+            }))
+        );
+        guardarUsuarios();
+    }
+
+}
 
 let usuarioEditando = null;
 
@@ -95,6 +140,7 @@ function guardarUsuarios() {
         "usuarios",
         JSON.stringify(usuarios)
     );
+
 }
 
 
@@ -382,7 +428,7 @@ function mostrarMensaje(mensaje, tipo) {
 
 form.addEventListener(
     "submit",
-    function(event) {
+    async function(event) {
 
         event.preventDefault();
 
@@ -487,7 +533,7 @@ form.addEventListener(
 
             if (passwordValue) {
                 usuario.password =
-                    passwordValue;
+                    await hashPassword(passwordValue);
             }
 
             mostrarMensaje(
@@ -499,26 +545,19 @@ form.addEventListener(
 
             const nuevoUsuario = {
 
-                id:
-                    Date.now(),
+                id: Date.now(),
 
-                username:
-                    usernameValue,
+                username: usernameValue,
 
-                name:
-                    nameValue,
+                name: nameValue,
 
-                email:
-                    emailValue,
+                email: emailValue,
 
-                role:
-                    roleValue,
+                role: roleValue,
 
-                status:
-                    statusValue,
+                status: statusValue,
 
-                password:
-                    passwordValue
+                password: await hashPassword(passwordValue)
             };
 
             usuarios.push(nuevoUsuario);
@@ -607,4 +646,8 @@ tableBody.addEventListener(
 );
 
 
-renderizarUsuarios();
+// Inicializar (migración/seed) y renderizar
+(async function bootstrap() {
+    await migrateOrSeedUsuarios();
+    renderizarUsuarios();
+})();
